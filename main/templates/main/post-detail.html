@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load main_tags %}
+
+{% block title %}
+    {{post.title}} : {{subreddit.name}}
+{% endblock title %}
+
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/subreddit-detail.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/post-detail.css' %}">
+{% endblock statics %}
+
+{% block current_location %}
+    <h2 class="nav-currentLocation">
+        r/{{subreddit.name}}
+    </h2>
+{% endblock current_location %}
+
+
+{% block content %}
+    <main class="post-page-detail">
+
+            
+        <div class="subreddit-header-background">
+            <a href="{% url 'main:subreddit-detail' subreddit.name %}">
+                <div class="post-detail-header">
+                    <span>
+                        r/{{subreddit.name}}
+                    </span>
+                </div>
+            </a>
+        </div>
+
+
+        <div class="main">
+
+            <div class="post-list">
+                
+                <div class="post detail">
+                    <div class="vote-part">
+                        <button class="post-upvote"  id="upvote-{{ post.id }}" data-post-id="{{post.id}}" {% if post|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                            <div class="post-upvote-btn">
+                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+                            </div>
+                        </button>
+                        <div class="post-votes" id="votes-on-{{ post.id }}">{{ post.votes_count }}</div>
+                        <button class="post-downvote"  id="downvote-{{ post.id }}" data-post-id="{{post.id}}" {% if post|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                            <div class="post-downvote-btn">
+                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="post-part">
+                        <div class="top-line">
+                            Posted by
+                            <span class="top-line-username">
+                                u/{{post.creator.username}}
+                            </span>
+                            <span>
+                                {{post.whenpublished}}
+                            </span>
+                        </div>
+                        <h3 class="post-title">
+                            {{post.title}}
+                        </h3>
+
+                        <div class="post-description">
+                            <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px;">{{post.text}}</p>
+                        </div>
+                        <div class="post-comment-section">
+                            <div class="comments-line">
+                                <span class="comment-svg">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
+                                </span>
+                                <span style="color: rgb(129, 131, 132);">
+                                    {{post.comment_count}} Comments
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% if user.is_authenticated %}
+                    <div class="post-comment">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {{form.as_p}}
+                            <div class="post-comment-lowerline">
+                                <button class="post-comment-btn">COMMENT</button>
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                <div class="cant_comment"></div>
+                {% endif %}
+                <div class="comment-sort-section">
+                    <div>SORT BY</div>
+                    <button class="comment-sort-btn">
+                        <!-- DO IT LATER -->
+                    </button>
+                </div>
+                <div class="comment-section">
+                    {% for comment in post.children %}
+                    <div id="comment-{{comment.id}}" class="comment">
+                        <div class="comment-vote">
+                            <button id="comment-upvote-{{comment.id}}" class="comment-upvote" data-comment-id="{{ comment.id }}" {% if comment|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                                <div class="comment-upvote-btn">
+                                    <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+                                </div>
+                            </button>
+                            <button id="comment-downvote-{{comment.id}}" class="comment-downvote" data-comment-id="{{ comment.id }}" {% if comment|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                                <div class="comment-downvote-btn">
+                                    <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="comment-main">
+                            <div class="comment-top">
+                                {{comment.commentator}}
+                                <span class="comment-points">
+                                    <span id="comment-point-{{ comment.id }}">{{comment.votes_count}}</span> points ·
+                                </span>
+                                <span style="color: rgb(129, 131, 132);">
+                                    {{ comment.whenpublished }}
+                                </span>
+                            </div>
+                            <div class="comment-text" style="font-size: 14px; margin-top: 3px;">
+                                {{comment.text}}
+                            </div>
+                            <div class="comment-reply">
+                                <button class="btn-reply">
+                                    <div class="reply-svg">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
+                                    </div>
+                                    <span>Reply</span>
+                                </button>
+                                {% if comment|is_comment:request.user %}
+                                <button class="btn-reply btn-delete" data-comment-id="{{ comment.id }}" >
+                                    Delete
+                                </button>
+                                {% endif %}
+                                <button class="btn-reply">
+                                    Save
+                                </button>
+                            </div>    
+                            {% for reply in comment.children.all %}
+                                <div id="comment-{{reply.id}}" class="comment-child" style="display: flex">
+                                    <div class="comment-vote">
+                                        <button id="comment-upvote-{{reply.id}}" class="comment-upvote" data-comment-id="{{ reply.id }}" {% if reply|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                                            <div class="comment-upvote-btn">
+                                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+                                            </div>
+                                        </button>
+                                        <button id="comment-downvote-{{reply.id}}" class="comment-downvote" data-comment-id="{{ reply.id }}" {% if reply|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                                            <div class="comment-downvote-btn">
+                                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
+                                            </div>
+                                        </button>
+                                    </div>
+                                <div class="comment-main">
+                                <div class="comment-top">
+                                    {{reply.commentator}}
+                                    <span class="comment-points">
+                                        <span id="comment-point-{{ reply.id }}">{{reply.votes_count}}</span> points ·
+                                    </span>
+                                    <span style="color: rgb(129, 131, 132);">
+                                        {{ reply.whenpublished }}
+                                    </span>
+                                </div>
+                                <div class="comment-text" style="font-size: 14px; margin-top: 3px;">
+                                    {{reply.text}}
+                                </div>
+                                <div class="comment-reply">
+                                    <button class="btn-reply">
+                                        <div class="reply-svg">
+                                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
+                                        </div>
+                                        <span>Reply</span>
+                                    </button>
+                                    {% if reply|is_comment:request.user %}
+                                    <button class="btn-reply btn-delete" data-comment-id="{{ reply.id }}" >
+                                        Delete
+                                    </button>
+                                    {% endif %}
+                                    <button class="btn-reply">
+                                        Save
+                                    </button>
+                                </div>    
+                                </div>    
+                                </div>
+
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        
+            <aside class="sidebar">
+                <div class="sidebar-box">
+                    <h2 class="sidebar-title" style="padding-bottom: 12px;">
+                        About Community
+                    </h2>
+                    <p style="padding-bottom: 12px; font-weight: 700;">r/{{subreddit.name}}</p>
+                    {{ subreddit.description }}
+
+                    <div>
+                        <h2 class="subreddit-members">{{ subreddit.members_count }}</h2>
+                        <p class="subreddit-members-p">
+                            Members
+                        </p>
+                        <div>
+                            <p style="font-size: 14px;">
+                                <span class="cake-svg">
+                                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path d="M37.5 22.5V20h-35v15c0 1.4 1.1 2.5 2.5 2.5h30c1.4 0 2.5-1.1 2.5-2.5H6.2c-.6 0-1.2-.5-1.2-1.2s.6-1.2 1.2-1.2h31.3V30H6.2c-.6 0-1.2-.5-1.2-1.2s.6-1.2 1.2-1.2h31.3V25H6.2c-.6 0-1.2-.5-1.2-1.2s.6-1.2 1.2-1.2h31.3zM22.5 6c0 1.4-1.1 2.5-2.5 2.5S17.5 7.4 17.5 6 20 0 20 0s2.5 4.6 2.5 6zM20 15c-.7 0-1.3-.6-1.3-1.2v-2.5c0-.7.6-1.2 1.2-1.2.7 0 1.2.6 1.2 1.2v2.5c.1.7-.4 1.2-1.1 1.2z"></path><path d="M22.8 11.3v2.3a3 3 0 01-2.5 2.9c-1.6.2-3-1.1-3-2.7v-5-.1l-.8-.4c-.9-.4-2-.3-2.7.4L2.5 18.5h35l-14.7-7.2z"></path></svg>
+                                </span>
+                                Created
+                                {{subreddit.creation_data|date:"M d, Y"}}
+                                <a href="{% url 'main:create-post-in' subreddit.name %}">
+                                    <button class="subreddit-create-postbtn">CREATE POST</button>
+                                </a>
+
+                                {% if user.is_authenticated and subreddit|check_join:request.user %}
+                                <button class="joined sjoin subreddit-create-postbtn" data-sub-id="{{ subreddit.id }}">JOINED</button>
+                                {% else %}
+                                <button class="join sjoin subreddit-create-postbtn" data-sub-id="{{ subreddit.id }}">JOIN</button>
+                                {% endif %}
+
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script src="{% static 'js/post-detail.js' %}"></script>
+{% endblock content %} 

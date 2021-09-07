@@ -1,0 +1,209 @@
+
+.main {
+    padding: 20px 24px;
+    min-height: 100vh;
+    display: flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    column-gap: 26px;
+}
+
+.post-list {
+    width: 640px;
+}
+
+.create-post {
+    background: rgb(26, 26, 27);
+    border: 1px solid rgb(52, 53, 54);
+    padding: 8px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.create-post-input{
+    border-radius: 4px;
+    line-height: 21px;
+    padding: 0px 16px;
+    height: 38px;
+    font-size: 14px;
+    width: 100%;
+    color: rgb(215, 218, 220);
+    border: 1px solid rgb(52, 53, 54);
+    background: rgb(39, 39, 41);
+    cursor: pointer;
+}
+
+.post {
+    width: 100%;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    max-height: 500px;
+    border: 1px solid rgb(52, 53, 54);
+    position: relative;
+    background: rgb(26, 26, 27);
+}
+.post:hover {
+    border-color: rgb(129, 131, 132);
+}
+.vote-part {
+    height: 100%;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    left: 0px;
+    z-index: 5;
+    padding: 8px 4px;
+    background: rgb(22, 22, 23);
+    border-radius: 4px 0px 0px 4px;
+}
+.post-part {
+    padding: 8px 0px 0px 40px;
+    margin-left: 4px;
+}
+
+.post-upvote, .post-downvote {
+    background: transparent;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    outline: none;
+    color: rgb(129, 131, 132);
+}
+.post-upvote:hover {
+    background: rgb(39, 39, 41);
+    color: rgb(0, 204, 153);
+}
+.post-downvote:hover {
+    background: rgb(39, 39, 41);
+    color: rgb(214, 138, 89);
+}
+
+.post-upvote-btn, .post-downvote-btn {
+    height: 28px;
+}
+
+.post-votes {
+    font-weight: 700;
+    font-size: 12px;
+    color: rgb(215, 218, 220);
+}
+
+.top-line {
+    margin: 0px 8px 8px;
+    color: rgb(129, 131, 132);
+    font-size: 12px;
+}
+
+.top-line-subreddit {
+    color: rgb(215, 218, 220);
+    font-weight: 500;
+    margin-right: 3px;
+}
+
+.top-line-username {
+    margin-right: 3px;
+}
+
+.post-title {
+    font-weight: 600;
+    margin: 0px 8px;
+    color: rgb(215, 218, 220);
+}
+
+.post-description {
+    padding: 5px 8px 10px;
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.post-comment-section {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 32px;
+    font-weight: 700;
+    margin-left: 4px;
+    color: rgb(129, 131, 132);
+    font-size: 12px;
+}
+
+.comments-line {
+    padding: 4px;
+    border-radius: 2px;
+    color: rgb(129, 131, 132);
+}
+.comments-line:hover {
+    background: rgba(178, 171, 161, 0.1);
+}
+.comment-svg {
+    padding-right: 4px;
+    display: inline-block;
+    height: 16px;
+    vertical-align: middle;
+    color: rgb(129, 131, 132);
+    
+}
+.sidebar {
+    flex-shrink: 0;
+    width: 312px;
+}
+.sidebar-box {
+    border-radius: 4px;
+    padding: 12px;
+    background: rgb(26, 26, 27);
+    border: 1px solid rgb(52, 53, 54);
+}
+.sidebar-title {
+    color: rgb(129, 131, 132);
+    padding-bottom: 12px;
+    color: rgb(129, 131, 132);
+    font-size: 14px;
+}
+.sidebar-sub {
+    padding: 12px 0px 4px;
+    display: flex;
+    justify-content: space-between;
+    -webkit-box-pack: justify;;
+    color: rgb(215, 218, 220);
+    font-size: 12px;
+}
+.sidebar-name {
+    width: 144px;
+}
+@media only screen and  (max-width: 768px) {
+    aside {
+        display: none;
+    }
+}
+
+.sidebar-joinbtn {
+    width: 106px;
+    height: 32px;
+    padding: 4px 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    border: 1px solid rgb(215, 218, 220);
+    cursor: pointer;
+    line-height: 24px;
+    background: rgb(215, 218, 220);
+    color: rgb(26, 26, 27);
+    font-size: 12px;
+}
+
+.sidebar-joinEDbtn {
+    width: 106px;
+    height: 32px;
+    padding: 4px 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    border: 1px solid rgb(215, 218, 220);
+    cursor: pointer;
+    line-height: 24px;
+    background: transparent;
+    color: rgb(215, 218, 220);
+    font-size: 12px;
+}

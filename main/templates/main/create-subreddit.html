@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Create Subreddit : Reddit Clone
+{% endblock title %}
+
+{% block current_location %}
+
+    <span class="nav-location-svg">
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path d="M5 15a1 1 0 01-1-1v-2.83a1 1 0 01.29-.7l8.09-8.09a1 1 0 011.41 0l2.83 2.83a1 1 0 010 1.41l-8.08 8.09a1 1 0 01-.71.29zm12 1a1 1 0 010 2H3a1 1 0 010-2z"></path></svg>
+    </span>
+    <h2 class="nav-currentLocation">
+        Create Community
+    </h2>
+{% endblock current_location %}
+
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/create-subreddit.css' %}">
+{% endblock statics %}
+
+
+{% block content %}
+
+<div class="form-create-container">
+    <div class="decor"></div>
+    <form action="" method="post" class="create-subreddit-form">
+        <h1 class="form-title">Create a community</h1>
+        {% csrf_token %}
+        <div class="name-label">
+            <h2 class="input-title">
+                Name
+            </h2>
+            <p class="input-description">Community names including capitalization cannot be changed.</p>
+            <input class="name-input" type="text" name="name" maxlength="150" required="" id="id_name">
+        </div>
+        <div class="name-label">
+            <h2 class="input-title">
+                Description
+            </h2>
+            <p class="input-description">Community names including capitalization cannot be changed.</p>
+            <input class="name-input" type="text" name="description" maxlength="250" required="" id="id_description">
+        </div>
+        <input class="form-post-btn" type="submit" value="CREATE COMMUNITY">
+	</form>
+</div>
+
+{% endblock content %}

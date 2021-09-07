@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Submit to {{subreddit.name}}
+{% endblock title %}
+
+{% block current_location %}
+
+    <span class="nav-location-svg">
+        <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path d="M5 15a1 1 0 01-1-1v-2.83a1 1 0 01.29-.7l8.09-8.09a1 1 0 011.41 0l2.83 2.83a1 1 0 010 1.41l-8.08 8.09a1 1 0 01-.71.29zm12 1a1 1 0 010 2H3a1 1 0 010-2z"></path></svg>
+    </span>
+    <h2 class="nav-currentLocation">
+        r/{{subreddit}}
+    </h2>
+{% endblock current_location %}
+
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/create-post.css' %}">
+{% endblock statics %}
+
+
+{% block content %}
+<div class="form-container">
+    <form action="" method="post" class="create-post-form">
+        <h1 class="form-title">Create a post</h1>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="form-post-btn" type="submit" value="POST">
+	</form>
+</div>
+
+{% endblock content %}

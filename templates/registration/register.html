@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Login : Reddit CLone
+{% endblock title %}
+
+{% block statics %}<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">{% endblock statics %}
+
+
+{% block content %}
+
+    {% if form.errors %}
+      <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    {% if next %}
+      {% if user.is_authenticated %}
+        <p>Your account doesn't have access to this page. To proceed,
+        please login with an account that has access.</p>
+      {% else %}
+        <p>Please login to see this page.</p>
+      {% endif %}
+    {% endif %}
+<div class="logink">
+
+    <div class="login-window">
+        <div class="decor-panel"></div>
+        <div class="login-panel">        
+            <form class="login-form" method="post" action="{% url 'accounts:register' %}">
+                {% csrf_token %}
+                <h2 class="login-title">REGISTER</h2>
+                <label>
+                    <input placeholder="username" type="text" name="username" class="login-input" maxlength="150" autocapitalize="none" autocomplete="username" autofocus="" required="" id="id_username">
+                </label>
+                <label>
+                    <input placeholder="password" type="password" name="password1" autocomplete="current-password" class="login-input" required="" id="id_password1">
+                </label>
+                <label>
+                    <input placeholder="password" type="password" name="password2" autocomplete="current-password" class="login-input" required="" id="id_password2">
+                </label>
+                <button type="submit" class="btn-login">LOG IN</button>
+                <input type="hidden" name="next" value="{{ next }}" />
+
+            </form>
+            <div class="login-util">
+                <a href="{% url 'accounts:login' %}">Already have an account? Sign Up</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

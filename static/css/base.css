@@ -1,0 +1,306 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500&display=swap');
+
+body {
+    background: black;
+    font-family: IBM Plex Sans, sans-serif;
+    color: rgb(215, 218, 220);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+nav {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0px 20px;
+    overflow:hidden;
+    position: sticky;
+    top: 0px;
+    position: sticky;
+    z-index: 100;
+    width: 100%;
+    height: 49px;
+    border-bottom: 1px solid rgb(52, 53, 54);
+    background-color: rgb(26, 26, 27);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(215, 218, 220);
+
+}
+
+.logo {
+    font-size: 24px;
+    padding-left: 0.5rem;
+}
+nav svg {
+    height: 100%;
+}
+.nav-svg {
+    height: 32px;
+    width: 32px;
+}
+
+
+
+.nav-searchbar {
+    border-radius: 4px;
+    padding: 0px 16px 0px 40px;
+    width: 100%;
+    height: 36px;
+    outline: none;
+    font-size: 14px;
+    color: rgb(215, 218, 220);
+    background: rgb(39, 39, 41);
+    border: 1px solid rgb(52, 53, 54);
+}
+.search {
+    margin: 0px 16px;
+    width: 100%;
+    position: relative;
+}
+.nav-searchbar:hover, .nav-searchbar:focus {
+    border-color: rgb(215, 218, 220);
+    background: rgb(26, 26, 27);
+}
+
+.input-svg {
+    position: absolute;
+    height: 20px;
+    top: 8px;
+    left: 5px;
+    color: rgb(129, 131, 132);
+}
+.nav-buttons {
+    display: flex;
+}
+.nav-btn {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    cursor: pointer;
+    background: none;
+    line-height: 24px;
+    font-size: 12px;
+    color: rgb(215, 218, 220);
+    border: 1px solid rgb(215, 218, 220);
+}
+.login {
+    width: 120px;
+    padding: 3px 16px;
+}
+.login:hover {
+    border-color: rgb(235, 236, 237);
+    color: rgb(235, 236, 237);
+}
+.signup {
+    width: 120px;
+    padding: 3px 16px;
+    margin-left: 16px;
+    background: rgb(215, 218, 220);
+    color: rgb(26, 26, 27);
+}
+.signup:hover {
+    background: rgb(235, 236, 237);
+
+}
+.pagination {
+    text-align: center;
+    width: 100%;
+    height: 50px;
+    border: 1px solid rgb(52, 53, 54);
+    background: rgb(26, 26, 27);
+    margin-top: 15px;
+
+}
+.page-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 10px 10px;
+}
+.page {
+    padding: 2px 5px;
+    border: 1px solid #818384;
+    width: 71px;
+}
+
+.nav-dropdown-btn {
+    color: white;
+    height: 40px;
+    background: transparent;
+    margin-left: 8px;
+    padding: 0px 8px;
+    border-radius: 4px;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid rgba(52, 53, 54, 0.493);
+}
+.nav-dropdown-btn:hover {
+    border-color: rgb(52, 53, 54);
+}
+.nav-username {
+    width: 177px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.nav-username span {
+    width: 100%;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+    color: rgb(215, 218, 220);
+    font-size: 12px;
+}
+.nav-dropdown {
+    position: relative;
+}
+.nav-dropdown-svg {
+    height: 20px;
+    color: rgb(129, 131, 132);
+}
+
+.nav-dropdown-content {
+    display: none;
+    position: fixed;
+    width: 215px;
+    right: 20px;
+    top: 40px;
+    background: rgb(26, 26, 27);
+    border-radius: 0px 0px 4px 4px;
+    border-right: 1px solid rgb(52, 53, 54);
+    border-bottom: 1px solid rgb(52, 53, 54);
+    border-left: 1px solid rgb(52, 53, 54);
+    border-image: initial;
+    border-top: none;
+}
+.nav-dropdown-content a {
+    float: none;
+    color: black;
+    padding: 3px 0px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    overflow: visible;
+}
+.dropdown-location {
+    display: none;
+    position: fixed;
+    width: 270px;
+    left: 134px;
+    top: 40px;
+    background: rgb(26, 26, 27);
+    border-radius: 0px 0px 4px 4px;
+    border-right: 1px solid rgb(52, 53, 54);
+    border-bottom: 1px solid rgb(52, 53, 54);
+    border-left: 1px solid rgb(52, 53, 54);
+    border-image: initial;
+    border-top: none;
+}
+
+.user-dropdown:hover .nav-dropdown-content {
+    display: block;
+}
+.nav-location:hover .dropdown-location {
+    display: block;
+
+}
+.nav-dropdown {
+    border-bottom: none;
+}
+.nav-dropdown-title {
+    margin: 8px 6px 4px;
+    font-size: 10px;
+    color: rgb(129, 131, 132);
+}
+.nav-dropdown-profile {
+    display: flex;
+    padding: 7px 16px 7px 30px;
+    position: relative;
+    font-weight: 500;
+    color: rgb(215, 218, 220);
+    font-size: 14px;
+}
+.nav-dropdown-profilesvg {
+    color: rgb(129, 131, 132);
+    height: 20px;
+    position: absolute;
+    left: 4px;
+    top: 6px;
+}
+
+.nav-dropdown-profile:hover {
+    background: rgb(39, 39, 41);
+}
+
+.dropdown-logoutbtn::before {
+    content: "";
+    position: absolute;
+    background: rgb(52, 53, 54);
+    top: 0px;
+    left: 0px;
+    height: 1px;
+    width: 214px;
+}
+
+@media screen and (max-width: 1024px) {
+    .nav-username {
+        max-width: 60px;
+
+    }
+}
+@media screen and (max-width: 768px) {
+    .location {
+        max-width: 100px;
+        padding: 0px;
+        overflow: hidden;
+    }
+}
+
+
+.upvoted {
+    color: rgb(0, 204, 153);
+}
+
+.location {
+    width: 270px;
+}
+.nav-currentLocation {
+    font-weight: 600;
+    font-size: 14px;
+    text-align: right;
+}
+.nav-location-svg {
+    height: 22px;
+    margin-right: 8px;
+    color: #59d663;
+}
+
+@media (max-width: 1024px) {
+    .logo {
+        display: none;
+    }
+    .dropdown-location {
+        left: 60px;
+    }
+}
+.nav-feeds {
+    color: #59d663;
+}
+
+.nav-create-post-btn {
+    height: 22px;
+    margin-right:  8px;
+}
