@@ -76,6 +76,7 @@ commentDownvoteButtons.forEach(e => {
     });
 });
 
+// reply form for the parent comments
 const commentReply = (id) => {
 
 

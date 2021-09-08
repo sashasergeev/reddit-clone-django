@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from .forms import CommentForm
 
+from accounts.models import Profile
+
 # Create your views here.
 
 

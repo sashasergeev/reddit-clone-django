@@ -258,7 +258,9 @@ nav svg {
 @media screen and (max-width: 1024px) {
     .nav-username {
         max-width: 60px;
-
+    }
+    .nav-karma {
+        display: none;
     }
 }
 @media screen and (max-width: 768px) {
@@ -303,4 +305,10 @@ nav svg {
 .nav-create-post-btn {
     height: 22px;
     margin-right:  8px;
+}
+
+.nav-karma {
+    font-size: 11px;
+    color: #d7dadc5e;
+    padding-top: 4px;
 }

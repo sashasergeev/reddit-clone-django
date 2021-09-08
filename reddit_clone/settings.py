@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "main",
-    "accounts",
+    "accounts.apps.AccountsConfig",
     "mptt",
     "django.contrib.admin",
     "django.contrib.auth",
