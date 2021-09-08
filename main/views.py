@@ -49,13 +49,9 @@ def PostDetailPage(request, name, pk):
 
     # generic page rendering
     subreddit = Subreddit.objects.get(name=name)
-    post = subreddit.posts.filter(pk=pk)
-    if post.exists():
-        pass
-    else:
-        raise Http404("Post not found")
+    post = get_object_or_404(subreddit.posts, pk=pk)
 
-    context = {"subreddit": subreddit, "post": post.get(pk=pk), "form": form}
+    context = {"subreddit": subreddit, "post": post, "form": form}
 
     return render(request, "main/post-detail.html", context)
 

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load main_tags %}
+{% load mptt_tags %}
 
 {% block title %}
     {{post.title}} : {{subreddit.name}}
@@ -100,16 +101,17 @@
                         <!-- DO IT LATER -->
                     </button>
                 </div>
+
                 <div class="comment-section">
-                    {% for comment in post.children %}
-                    <div id="comment-{{comment.id}}" class="comment">
+                    {% recursetree post.children %}
+                    <div id="comment-{{node.id}}" class="comment">
                         <div class="comment-vote">
-                            <button id="comment-upvote-{{comment.id}}" class="comment-upvote" data-comment-id="{{ comment.id }}" {% if comment|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                            <button id="comment-upvote-{{node.id}}" class="comment-upvote" data-comment-id="{{ node.id }}" {% if node|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
                                 <div class="comment-upvote-btn">
                                     <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                                 </div>
                             </button>
-                            <button id="comment-downvote-{{comment.id}}" class="comment-downvote" data-comment-id="{{ comment.id }}" {% if comment|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                            <button id="comment-downvote-{{node.id}}" class="comment-downvote" data-comment-id="{{ node.id }}" {% if node|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
                                 <div class="comment-downvote-btn">
                                     <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                                 </div>
@@ -117,26 +119,26 @@
                         </div>
                         <div class="comment-main">
                             <div class="comment-top">
-                                {{comment.commentator}}
+                                {{node.commentator}}
                                 <span class="comment-points">
-                                    <span id="comment-point-{{ comment.id }}">{{comment.votes_count}}</span> points ·
+                                    <span id="comment-point-{{ node.id }}">{{node.votes_count}}</span> points ·
                                 </span>
                                 <span style="color: rgb(129, 131, 132);">
-                                    {{ comment.whenpublished }}
+                                    {{ node.whenpublished }}
                                 </span>
                             </div>
                             <div class="comment-text" style="font-size: 14px; margin-top: 3px;">
-                                {{comment.text}}
+                                {{node.text}}
                             </div>
                             <div class="comment-reply">
-                                <button class="btn-reply">
+                                <button class="btn-reply" onclick="commentReply({{node.id}})">
                                     <div class="reply-svg">
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                                     </div>
                                     <span>Reply</span>
                                 </button>
-                                {% if comment|is_comment:request.user %}
-                                <button class="btn-reply btn-delete" data-comment-id="{{ comment.id }}" >
+                                {% if node|is_comment:request.user %}
+                                <button class="btn-reply btn-delete" data-comment-id="{{ node.id }}" >
                                     Delete
                                 </button>
                                 {% endif %}
@@ -144,56 +146,15 @@
                                     Save
                                 </button>
                             </div>    
-                            {% for reply in comment.children.all %}
-                                <div id="comment-{{reply.id}}" class="comment-child" style="display: flex">
-                                    <div class="comment-vote">
-                                        <button id="comment-upvote-{{reply.id}}" class="comment-upvote" data-comment-id="{{ reply.id }}" {% if reply|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
-                                            <div class="comment-upvote-btn">
-                                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
-                                            </div>
-                                        </button>
-                                        <button id="comment-downvote-{{reply.id}}" class="comment-downvote" data-comment-id="{{ reply.id }}" {% if reply|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
-                                            <div class="comment-downvote-btn">
-                                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
-                                            </div>
-                                        </button>
-                                    </div>
-                                <div class="comment-main">
-                                <div class="comment-top">
-                                    {{reply.commentator}}
-                                    <span class="comment-points">
-                                        <span id="comment-point-{{ reply.id }}">{{reply.votes_count}}</span> points ·
-                                    </span>
-                                    <span style="color: rgb(129, 131, 132);">
-                                        {{ reply.whenpublished }}
-                                    </span>
-                                </div>
-                                <div class="comment-text" style="font-size: 14px; margin-top: 3px;">
-                                    {{reply.text}}
-                                </div>
-                                <div class="comment-reply">
-                                    <button class="btn-reply">
-                                        <div class="reply-svg">
-                                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
-                                        </div>
-                                        <span>Reply</span>
-                                    </button>
-                                    {% if reply|is_comment:request.user %}
-                                    <button class="btn-reply btn-delete" data-comment-id="{{ reply.id }}" >
-                                        Delete
-                                    </button>
-                                    {% endif %}
-                                    <button class="btn-reply">
-                                        Save
-                                    </button>
-                                </div>    
-                                </div>    
-                                </div>
-
-                            {% endfor %}
                         </div>
                     </div>
-                    {% endfor %}
+
+                    {% if not node.is_leaf_node %}
+                    <div class="child">
+                        {{ children }}
+                    </div>
+                    {% endif %}
+                    {% endrecursetree %}
                 </div>
             </div>
         

@@ -151,3 +151,9 @@
 .comment-upvote-btn, .comment-downvote-btn {
     height: 28px;
 }
+.d-none {
+    display: none;
+}
+.child {
+    margin-left: 45px;
+}

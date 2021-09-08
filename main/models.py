@@ -4,6 +4,7 @@ from django.db.models import constraints
 from django.db.models.deletion import CASCADE
 from django.utils import timezone
 import math
+from mptt.models import MPTTModel, TreeForeignKey
 
 # Create your models here.
 
@@ -47,7 +48,9 @@ class Post(models.Model):
         return upvotes - downvotes
 
     def children(self):
-        return self.comment_set.filter(parent=None)
+        children_comms = self.comment_set.filter(parent=None)
+        children_comms = children_comms.get_descendants(include_self=True)
+        return children_comms
 
     def get_absolute_url(self):
         return f"/r/{self.sub.name}/{self.id}/"
@@ -113,16 +116,18 @@ class Post(models.Model):
                 return str(years) + " years ago"
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     text = models.TextField()
     commentator = models.ForeignKey(User, on_delete=models.CASCADE)
     commented_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
-    votes = models.ManyToManyField(User, related_name="comment_votes", blank=True)
 
-    parent = models.ForeignKey(
-        "self", related_name="children", null=True, blank=True, on_delete=models.CASCADE
+    parent = TreeForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
+
+    class MPTTMeta:
+        order_insertion_by = ["commented_at"]
 
     def __str__(self):
         return f"{self.post} - {self.commentator}"
@@ -233,7 +238,9 @@ class CommentUpVote(models.Model):
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, related_name="comment_upvote"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="upvote_user_comment")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="upvote_user_comment"
+    )
 
     class Meta:
         verbose_name_plural = "Comment Upvotes"
@@ -242,7 +249,7 @@ class CommentUpVote(models.Model):
                 fields=["comment", "user"], name="unique_comment_upvote"
             )
         ]
-    
+
     def __str__(self):
         return f"{self.comment} upvoted by {self.user.username}"
 
@@ -251,7 +258,9 @@ class CommentDownVote(models.Model):
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, related_name="comment_downvote"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="downvote_user_comment")
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="downvote_user_comment"
+    )
 
     class Meta:
         verbose_name_plural = "Comment Downvotes"
@@ -260,6 +269,6 @@ class CommentDownVote(models.Model):
                 fields=["comment", "user"], name="unique_comment_downvote"
             )
         ]
-    
+
     def __str__(self):
         return f"{self.comment} downvoted by {self.user.username}"

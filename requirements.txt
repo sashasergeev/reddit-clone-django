@@ -3,6 +3,8 @@ black==21.8b0
 click==8.0.1
 colorama==0.4.4
 Django==3.2.6
+django-js-asset==1.2.2
+django-mptt==0.13.2
 mypy-extensions==0.4.3
 pathspec==0.9.0
 platformdirs==2.3.0

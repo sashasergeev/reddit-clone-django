@@ -75,3 +75,35 @@ commentDownvoteButtons.forEach(e => {
         }).catch(err => console.log(err));
     });
 });
+
+const commentReply = (id) => {
+
+
+    let comment = document.querySelector(`#comment-${id}`);
+    if (document.contains(document.querySelector("#childForm"))) {
+        document.querySelector("#childForm").remove();
+    }
+    
+    comment.insertAdjacentHTML('afterend', 
+        `
+            <form id="childForm" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <p> <textarea name="text" cols="80" rows="10" class="post-comment-textarea" placeholder="What are you want to reply?" required="" id="id_text"></textarea></p>
+                <p> 
+                    <select name="parent" class="d-none" id="id_parent">
+                        <option value="${id}" selected="${id}">---------</option>
+                    </select>
+                </p>
+                <div class="post-comment-lowerline">
+                    <button class="post-comment-btn">COMMENT</button>
+                    <button class="post-comment-btn" onclick="hideForm()">Hide</button>
+                </div>
+
+            </form>
+        `
+    );
+}
+
+const hideForm = () => {
+    document.querySelector("#childForm").remove();
+}
