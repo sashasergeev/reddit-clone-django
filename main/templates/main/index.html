@@ -33,8 +33,11 @@ Reddit CLone - Dive into something
                         </button>
                     </div>
                     <div class="post-part">
-                        <div class="top-line">
-                            <span class="top-line-subreddit">
+                        <div class="top-line sub-h-l">
+                            <span class="top-line-subreddit sub-h-l">
+                                {% if item.sub.image %}
+                                    <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
+                                {% endif %}
                                 <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
                                 
                             </span>

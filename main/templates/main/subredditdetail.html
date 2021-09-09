@@ -14,6 +14,9 @@
 
 
 {% block current_location %}
+    {% if subreddit.image %}
+        <img class="nav-location-svg" src="{{ subreddit.image.url }}" alt="{{subreddit.name}} logo">
+    {% endif %}
     <h2 class="nav-currentLocation">
         r/{{subreddit.name}}
     </h2>
@@ -25,6 +28,9 @@
         <div class="subreddit-header">
             <div class="subreddit-header-background"></div>
             <div class="subreddit-header-toolbar">
+                {% if subreddit.image %}
+                    <img class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
+                {% endif %}
                 <h1 class="subreddit-header-toolbar-title">r/{{ subreddit.name }}</h1>
 
                 {% if user.is_authenticated and subreddit|check_join:request.user %}
@@ -57,10 +63,6 @@
                         </div>
                         <div class="post-part">
                             <div class="top-line">
-                                <span class="top-line-subreddit">
-                                    <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
-                                    
-                                </span>
                                 Posted by
                                 <span class="top-line-username">
                                     u/{{item.creator.username}}

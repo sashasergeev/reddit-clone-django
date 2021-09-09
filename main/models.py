@@ -1,20 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import constraints
-from django.db.models.deletion import CASCADE
 from django.utils import timezone
-import math
+
 from mptt.models import MPTTModel, TreeForeignKey
+from PIL import Image
+import math
 
 # Create your models here.
+
+
+def upload_image_rename(instance, filename):
+    filebase, extenstion = filename.split(".")
+    return "images/subreddit/%s.%s" % (instance.name, extenstion)
 
 
 class Subreddit(models.Model):
     name = models.CharField(max_length=150)
     members = models.ManyToManyField(User, related_name="sub_members")
-    creator = models.ForeignKey(User, related_name="sub_admin", on_delete=CASCADE)
+    creator = models.ForeignKey(
+        User, related_name="sub_admin", on_delete=models.CASCADE
+    )
     creation_data = models.DateField(auto_now_add=True)
     description = models.CharField(max_length=250)
+    image = models.ImageField(upload_to=upload_image_rename, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -24,6 +32,16 @@ class Subreddit(models.Model):
 
     def get_absolute_url(self):
         return f"/r/{self.name}/"
+
+    def save(self):
+        super().save()  # saving image first
+
+        img = Image.open(self.image.path)  # Open image using self
+
+        if img.height > 250 or img.width > 250:
+            new_img = (250, 250)
+            img.thumbnail(new_img)
+            img.save(self.image.path)  # saving image at the same path
 
 
 class Post(models.Model):

@@ -24,10 +24,10 @@
 
 <div class="form-create-container">
     <div class="decor"></div>
-    <form action="" method="post" class="create-subreddit-form">
+    <form action="" method="post" class="create-subreddit-form" enctype="multipart/form-data">
         <h1 class="form-title">Create a community</h1>
         {% csrf_token %}
-        <div class="name-label">
+        <div class="name-label" >
             <h2 class="input-title">
                 Name
             </h2>
@@ -38,8 +38,15 @@
             <h2 class="input-title">
                 Description
             </h2>
-            <p class="input-description">Community names including capitalization cannot be changed.</p>
+            <p class="input-description">Write short explonation what this community will be about.</p>
             <input class="name-input" type="text" name="description" maxlength="250" required="" id="id_description">
+        </div>
+        <div class="name-label">
+            <h2 class="input-title">
+                Community logo
+            </h2>
+            <p class="input-description"></p>
+            <input class="name-input" type="file" name="image" accept="image/*" id="id_image">
         </div>
         <input class="form-post-btn" type="submit" value="CREATE COMMUNITY">
 	</form>

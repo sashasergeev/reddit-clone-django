@@ -1,4 +1,9 @@
+from django.conf.urls import url
 from django.urls import path
+
+from django.conf import settings
+from django.conf.urls.static import static
+
 from .views import (
     CommentDownvoteHandle,
     CommentUpvoteHandle,
@@ -36,3 +41,5 @@ urlpatterns = [
     # delete comment -- used with fetch API
     path("comment/<int:pk>/", DeleteComment, name="delete-comment")
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

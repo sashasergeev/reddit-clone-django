@@ -1,7 +1,15 @@
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
-from .models import CommentDownVote, CommentUpVote, Subreddit, Post, PostsUpVotes, PostsDownVotes, Comment
+from .models import (
+    CommentDownVote,
+    CommentUpVote,
+    Subreddit,
+    Post,
+    PostsUpVotes,
+    PostsDownVotes,
+    Comment,
+)
 from django.core.paginator import Paginator
 from django.http import Http404, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -58,7 +66,7 @@ def PostDetailPage(request, name, pk):
     return render(request, "main/post-detail.html", context)
 
 
-# POST VOTES
+# POST VOTES - JavaScript
 def PostUpvoteHandle(request, pk):
     # obtaining needed data
     post = Post.objects.get(pk=pk)
@@ -155,7 +163,7 @@ def CommentDownvoteHandle(request, pk):
     # auth check
     if not user.is_authenticated:
         return redirect("accounts:login")
-    
+
     # checks if downvote exists, if so, deletes it
     downvote = CommentDownVote.objects.filter(comment=comment, user=user)
     if downvote.exists():
@@ -175,7 +183,7 @@ def CommentDownvoteHandle(request, pk):
     return JsonResponse(response)
 
 
-# JOIN / LEAVE SUBREDDIT
+# JOIN / LEAVE SUBREDDIT - JavaScript
 def SubJoin(request, pk):
     # obtaining needed data
     sub = Subreddit.objects.get(pk=pk)
@@ -274,7 +282,7 @@ class CreatePostIn(LoginRequiredMixin, generic.edit.CreateView):
 class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
     login_url = "/accounts/login/"
     model = Subreddit
-    fields = ["name", "description"]
+    fields = ["name", "description", "image"]
     template_name = "main/create-subreddit.html"
 
     def form_valid(self, form):
@@ -283,7 +291,7 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         return super(CreateSubreddit, self).form_valid(form)
 
 
-# delete comment
+# delete comment - JavaScript
 def DeleteComment(request, pk):
     # obtaining needed data
     comment = Comment.objects.get(pk=pk)

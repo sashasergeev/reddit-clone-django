@@ -207,3 +207,7 @@
     color: rgb(215, 218, 220);
     font-size: 12px;
 }
+.sub-h-l {
+    display: flex;
+    align-items: center;
+}
