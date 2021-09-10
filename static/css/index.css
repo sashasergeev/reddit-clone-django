@@ -117,6 +117,16 @@
     max-height: 250px;
     overflow: hidden;
 }
+.index-des:after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 90%;
+    height: 50%;
+    bottom:  25px;
+    background: -webkit-linear-gradient(transparent, #1a1a1b) left repeat;
+    background: linear-gradient(transparent, #1a1a1b) left repeat; 
+  }
 
 .post-comment-section {
     display: flex;

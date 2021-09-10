@@ -14,9 +14,7 @@
 
 
 {% block current_location %}
-    {% if subreddit.image %}
-        <img class="nav-location-svg" src="{{ subreddit.image.url }}" alt="{{subreddit.name}} logo">
-    {% endif %}
+    <img class="nav-location-svg" src="{{ subreddit.image.url }}" alt="{{subreddit.name}} logo">
     <h2 class="nav-currentLocation">
         r/{{subreddit.name}}
     </h2>
@@ -28,9 +26,7 @@
         <div class="subreddit-header">
             <div class="subreddit-header-background"></div>
             <div class="subreddit-header-toolbar">
-                {% if subreddit.image %}
-                    <img class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
-                {% endif %}
+                <img class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
                 <h1 class="subreddit-header-toolbar-title">r/{{ subreddit.name }}</h1>
 
                 {% if user.is_authenticated and subreddit|check_join:request.user %}
@@ -76,9 +72,15 @@
                                     {{item.title}}
                                 </h3>
                             </a>
-                            <div class="post-description">
-                                <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px;">{{item.text}}</p>
+                            {% if item.post_type == 'IP' %}
+                            <div class="post-description " style="max-height: none;">
+                                <img class="post-img" src="{{ item.image.url }}" style="max-width: 380px; display: block; margin: 10px auto;">
                             </div>
+                            {% else %}
+                            <div class="post-description index-des" style="max-height: none;">
+                                <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px; max-height: 200px;">{{item.text}}</p>
+                            </div>
+                            {% endif %}
                             <div class="post-comment-section">
                                 <div class="comments-line">
                                     <a href="{% url 'main:post-detail' item.sub.name item.pk %}">

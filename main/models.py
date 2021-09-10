@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from mptt.models import MPTTModel, TreeForeignKey
 from PIL import Image
@@ -10,6 +11,7 @@ import math
 
 
 def upload_image_rename(instance, filename):
+    print(filename)
     filebase, extenstion = filename.split(".")
     return "images/subreddit/%s.%s" % (instance.name, extenstion)
 
@@ -22,7 +24,12 @@ class Subreddit(models.Model):
     )
     creation_data = models.DateField(auto_now_add=True)
     description = models.CharField(max_length=250)
-    image = models.ImageField(upload_to=upload_image_rename, null=True, blank=True)
+    image = models.ImageField(
+        upload_to=upload_image_rename,
+        default="images/subreddit/default.png",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
         return self.name
@@ -35,9 +42,7 @@ class Subreddit(models.Model):
 
     def save(self):
         super().save()  # saving image first
-
         img = Image.open(self.image.path)  # Open image using self
-
         if img.height > 250 or img.width > 250:
             new_img = (250, 250)
             img.thumbnail(new_img)
@@ -46,10 +51,20 @@ class Subreddit(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    text = models.TextField()
+    text = models.TextField(max_length=5000,blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     sub = models.ForeignKey(Subreddit, related_name="posts", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    image = models.ImageField(upload_to="images/post/", null=True, blank=True)
+
+    # CHOICES FOR POST TYPE
+    class PostType(models.TextChoices):
+        TEXT_POST = "TP", _("Text")
+        IMAGE_POST = "IP", _("Image")
+
+    post_type = models.CharField(
+        max_length=2, choices=PostType.choices, default=PostType.TEXT_POST
+    )
 
     def __str__(self):
         return f"{self.title} - {self.sub}"

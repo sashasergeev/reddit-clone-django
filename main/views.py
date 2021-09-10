@@ -210,7 +210,7 @@ def SubJoin(request, pk):
 class CreatePost(LoginRequiredMixin, generic.edit.CreateView):
     login_url = "/accounts/login/"
     model = Post
-    fields = ["sub", "title", "text"]
+    fields = ["post_type", "sub", "title", "text", "image"]
     template_name = "main/create_post.html"
 
     def form_valid(self, form):
@@ -227,6 +227,9 @@ class CreatePost(LoginRequiredMixin, generic.edit.CreateView):
             "placeholder": "Choose a community",
             "class": "someclass",
         }
+        form.fields["post_type"].widget.attrs = {
+            "class": "form_inputs",
+        }
         form.fields["title"].widget.attrs = {
             "placeholder": "Title",
             "class": "form_inputs",
@@ -235,6 +238,11 @@ class CreatePost(LoginRequiredMixin, generic.edit.CreateView):
             "placeholder": "Text",
             "class": "form_inputs",
         }
+        form.fields["image"].widget.attrs = {
+            "class": "form_inputs",
+        }
+        form.fields['text'].required = False
+        form.fields['image'].required = False
         return form
 
     def get_context_data(self, **kwargs):
@@ -290,6 +298,13 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         form.instance.creator = user
         return super(CreateSubreddit, self).form_valid(form)
 
+    def get_form(self, form_class=None):
+        if form_class is None:
+            form_class = self.get_form_class()
+
+        form = super(CreateSubreddit, self).get_form(form_class)
+        form.fields['image'].required = False
+        return form
 
 # delete comment - JavaScript
 def DeleteComment(request, pk):

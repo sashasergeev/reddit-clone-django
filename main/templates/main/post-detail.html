@@ -14,9 +14,7 @@
 {% endblock statics %}
 
 {% block current_location %}
-    {% if subreddit.image %}
-        <img class="nav-location-svg" src="{{ subreddit.image.url }}" alt="{{subreddit.name}} logo">
-    {% endif %}
+    <img class="nav-location-svg" src="{{ subreddit.image.url }}" alt="{{subreddit.name}} logo">
     <h2 class="nav-currentLocation">
         r/{{subreddit.name}}
     </h2>
@@ -30,9 +28,7 @@
         <div class="subreddit-header-background">
             <a href="{% url 'main:subreddit-detail' subreddit.name %}">
                 <div class="post-detail-header">
-                    {% if subreddit.image %}
-                        <img style="height:56px; width: 56px;" class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
-                    {% endif %}
+                    <img style="height:56px; width: 56px;" class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
                     <span>
                         r/{{subreddit.name}}
                     </span>
@@ -72,10 +68,15 @@
                         <h3 class="post-title">
                             {{post.title}}
                         </h3>
-
-                        <div class="post-description">
+                        {% if post.post_type == 'IP' %}
+                        <div class="post-description" style="max-height: none;">
+                            <img class="post-img" src="{{ post.image.url }}">
+                        </div>
+                        {% else %}
+                        <div class="post-description" style="max-height: none;">
                             <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px;">{{post.text}}</p>
                         </div>
+                        {% endif %}
                         <div class="post-comment-section">
                             <div class="comments-line">
                                 <span class="comment-svg">
@@ -154,7 +155,6 @@
                             </div>    
                         </div>
                     </div>
-
                     {% if not node.is_leaf_node %}
                     <div class="child">
                         {{ children }}
@@ -170,9 +170,7 @@
                         About Community
                     </h2>
                     <p style="padding-bottom: 12px; font-weight: 700; display: flex; align-items: center;">
-                        {% if subreddit.image %}
-                            <img style="height:40px; width: 40px; margin-right: 12px; border: none;" class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
-                        {% endif %}
+                        <img style="height:40px; width: 40px; margin-right: 12px; border: none;" class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
                         <a href="{% url 'main:subreddit-detail' subreddit.name %}">
                             r/{{subreddit.name}}
                         </a>

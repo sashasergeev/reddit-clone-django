@@ -1,7 +1,6 @@
 .create-post-form {
-    max-width: 1000px;
-    margin: 0px auto;
-    color: rgb(215, 218, 220);
+    padding: 16px;
+    width: 500px;
 }
 label {
     display: none;
@@ -14,9 +13,11 @@ label {
     border-bottom: 1px solid rgb(52, 53, 54);
 }
 .form-container {
-    padding: 20px 24px;
-    margin: 0px auto;
-    height: 100px;
+    width: 100%;
+    min-height: calc(100vh - 49px);
+    display: flex;
+    color: rgb(215, 218, 220);
+    background: rgb(26, 26, 27);
 }
 #id_sub {
     margin-bottom: 8px;
@@ -62,4 +63,19 @@ textarea {
 .form-post-btn:hover {
     color: white;
     border-color: white;
+}
+.decor {
+    width: 140px;
+    min-height: 100%;
+    background: linear-gradient(135deg, rgb(0 168 119), rgb(17 29 26));
+}
+
+#id_post_type {
+    margin-bottom: 20px;
+}
+.input-title {
+    font-weight: 400;
+    margin-bottom: 4px;
+    font-size: 16px;
+    color: rgb(129, 131, 132);
 }

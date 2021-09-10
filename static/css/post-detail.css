@@ -157,3 +157,12 @@
 .child {
     margin-left: 45px;
 }
+.post {
+    max-height: none;
+}
+.post-img {
+    width: 85%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
