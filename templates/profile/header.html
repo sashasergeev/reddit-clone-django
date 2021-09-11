@@ -1,0 +1,11 @@
+
+<div class="profile-header">
+    <a href="{% url 'accounts:profile-overview' user.username %}" class="{% if current == 'overview' %}current{% endif %}">OVERVIEW</a>
+    <a href="{% url 'accounts:profile-posts' user.username %}"  class="{% if current == 'posts' %}current{% endif %}">POSTS</a>
+    <a href="{% url 'accounts:profile-comments' user.username %}"  class="{% if current == 'comments' %}current{% endif %}">COMMENTS</a>
+    {% if user.username == request.user.username %}
+        <a href="#"  class="{% if current == 'SAVED' %}current{% endif %}">SAVED</a>
+        <a href="{% url 'accounts:profile-upvoted' user.username %}"  class="{% if current == 'upvoted' %}current{% endif %}">UPVOTED</a>
+        <a href="{% url 'accounts:profile-downvoted' user.username %}"  class="{% if current == 'downvoted' %}current{% endif %}">DOWNVOTED</a>
+    {% endif %}
+</div>

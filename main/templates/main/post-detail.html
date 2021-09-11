@@ -58,9 +58,9 @@
                     <div class="post-part">
                         <div class="top-line">
                             Posted by
-                            <span class="top-line-username">
+                            <a class="top-line-username" style="color: rgb(129, 131, 132);" href="{% url 'accounts:profile-overview' post.creator.username %}">
                                 u/{{post.creator.username}}
-                            </span>
+                            </a>
                             <span>
                                 {{post.whenpublished}}
                             </span>

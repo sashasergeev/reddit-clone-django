@@ -255,7 +255,7 @@ class CreatePost(LoginRequiredMixin, generic.edit.CreateView):
 class CreatePostIn(LoginRequiredMixin, generic.edit.CreateView):
     login_url = "/accounts/login/"
     model = Post
-    fields = ["title", "text"]
+    fields = ["post_type", "title", "text", "image"]
     template_name = "main/create-post-in.html"
 
     def form_valid(self, form):
@@ -278,6 +278,14 @@ class CreatePostIn(LoginRequiredMixin, generic.edit.CreateView):
             "placeholder": "Text",
             "class": "form_inputs",
         }
+        form.fields["image"].widget.attrs = {
+            "class": "form_inputs",
+        }
+        form.fields["post_type"].widget.attrs = {
+            "class": "form_inputs",
+        }
+        form.fields['text'].required = False
+        form.fields['image'].required = False
         return form
 
     def get_context_data(self, **kwargs):

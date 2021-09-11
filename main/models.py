@@ -152,7 +152,7 @@ class Post(models.Model):
 class Comment(MPTTModel):
     text = models.TextField()
     commentator = models.ForeignKey(User, on_delete=models.CASCADE)
-    commented_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     parent = TreeForeignKey(
@@ -160,7 +160,7 @@ class Comment(MPTTModel):
     )
 
     class MPTTMeta:
-        order_insertion_by = ["commented_at"]
+        order_insertion_by = ["created_at"]
 
     def __str__(self):
         return f"{self.post} - {self.commentator}"
@@ -173,7 +173,7 @@ class Comment(MPTTModel):
     def whenpublished(self):
         now = timezone.now()
 
-        diff = now - self.commented_at
+        diff = now - self.created_at
 
         if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
             seconds = diff.seconds

@@ -22,12 +22,17 @@
 
 {% block content %}
 <div class="form-container">
-    <form action="" method="post" class="create-post-form">
+    <div class="decor"></div>
+    <form action="" method="post" class="create-post-form" enctype="multipart/form-data">
         <h1 class="form-title">Create a post</h1>
+        <h3 class="input-title">
+            Please choose the type of the post
+        </h3>
         {% csrf_token %}
         {{ form.as_p }}
         <input class="form-post-btn" type="submit" value="POST">
 	</form>
 </div>
+    <script src="{% static 'js/create-post.js' %}"></script>
 
 {% endblock content %}

@@ -40,9 +40,9 @@ Reddit CLone - Dive into something
                                 
                             </span>
                             Posted by
-                            <span class="top-line-username">
+                            <a class="top-line-username" style="color: rgb(129, 131, 132);" href="{% url 'accounts:profile-overview' item.creator.username %}">
                                 u/{{item.creator.username}}
-                            </span>
+                            </a>
                             <span>
                                 {{item.whenpublished}}
                             </span>
