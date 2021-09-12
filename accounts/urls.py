@@ -8,6 +8,7 @@ from .views import (
     CommentsProfile,
     UpvotedProfile,
     DownvotedProfile,
+    ProfileSettings
 )
 
 app_name = "accounts"
@@ -18,6 +19,7 @@ urlpatterns = [
     path("accounts/logout/", LogoutView, name="logout"),
     # PROFILE
     path("user/<slug:username>/", MainProfile, name="profile-overview"),
+    path("settings/profile/", ProfileSettings, name="profile-settings"),
     path("user/<slug:username>/posts/", PostsProfile, name="profile-posts"),
     path("user/<slug:username>/comments/", CommentsProfile, name="profile-comments"),
     path("user/<slug:username>/upvoted/", UpvotedProfile, name="profile-upvoted"),

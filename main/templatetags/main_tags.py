@@ -17,12 +17,6 @@ def check_relation_downvote(post, user):
     return post.post_downvote.filter(user=user.id).exists()
 
 
-# CHECK IF COMMENT IS DONE BY CURRENT USER
-@register.filter(name="is_comment")
-def is_comment(comment, user):
-    return user.comment_set.filter(pk=comment.id).exists()
-
-
 # CHECK IF COMMUNITY IS JOINED
 @register.filter(name="check_join")
 def check_join(sub, user):

@@ -1,6 +1,13 @@
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic
+from django.core.paginator import Paginator
+from django.http import Http404, HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse
+
+from .forms import CommentForm
+from accounts.models import Profile
 from .models import (
     CommentDownVote,
     CommentUpVote,
@@ -10,13 +17,6 @@ from .models import (
     PostsDownVotes,
     Comment,
 )
-from django.core.paginator import Paginator
-from django.http import Http404, HttpResponseRedirect
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-from .forms import CommentForm
-
-from accounts.models import Profile
 
 
 # Create your views here.
@@ -26,7 +26,8 @@ class IndexListView(generic.ListView):
     model = Post
     template_name = "main/index.html"
     paginate_by = 10
-
+    context_object_name = "posts"
+    
     def get_context_data(self, **kwargs):
         context = super(IndexListView, self).get_context_data(**kwargs)
         context["sub_list"] = Subreddit.objects.order_by("name")[:5]
@@ -317,6 +318,16 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         form = super(CreateSubreddit, self).get_form(form_class)
         form.fields["image"].required = False
         return form
+
+
+# delete comment - JavaScript
+def DeletePost(request, name, pk):
+    user = request.user
+    post = Post.objects.get(pk=pk)
+
+    if post.creator.username == user.username:
+        post.delete()
+    return redirect(reverse("main:subreddit-detail", args=[name]))
 
 
 # delete comment - JavaScript

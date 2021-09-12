@@ -51,7 +51,7 @@ class Subreddit(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    text = models.TextField(max_length=5000,blank=True)
+    text = models.TextField(max_length=5000, blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     sub = models.ForeignKey(Subreddit, related_name="posts", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

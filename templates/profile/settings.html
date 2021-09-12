@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load main_tags %}
+
+{% block title %}
+    Reddit Clone Settings
+{% endblock title %}
+
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/usersettings.css' %}">
+{% endblock statics %}
+
+{% block current_location %}
+    <h2 class="nav-currentLocation">
+        Profile Settings
+    </h2>
+{% endblock current_location %}
+
+
+{% block content %}
+    <section>
+        <h3 class="section-title">Profile Settings</h3>
+        <div class="container">
+            <div class="settings">
+                <h2 class="setting-title">Customize profile</h2>
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h3 class="settings-part">PROFILE INFORMATION</h3>
+                    <h3 class="label">About (optional)</h3>
+                    <p class="label-desc">A brief description of yourself shown on your profile.</p>
+                    <textarea style="margin-bottom: 32px;" class="textarea-about" placeholder="About (optional)" name="about" id="id_about" >{{ request.user.profile.about }}</textarea>
+                    <h3 class="settings-part">PROFILE IMAGE</h3>
+                    {% if request.user.profile.image %}
+                        <p style="font-size: 14px;">Current</p>
+                        <img  src="{{ request.user.profile.image.url }}" alt="">
+                    {% endif %}
+                    <input style="display: block;" type="file" name="image" accept="image/*" id="id_image">
+                    <input class="form-post-btn" type="submit" value="SAVE">
+                </form>
+            </div>
+        </div>
+    </section>
+
+{% endblock content %}

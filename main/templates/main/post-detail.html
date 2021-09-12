@@ -86,6 +86,11 @@
                                     {{post.comment_count}} Comments
                                 </span>
                             </div>
+                                {% if request.user.username == post.creator.username %}
+                                <button onclick="window.location.href='{% url 'main:delete-sub' subreddit.name post.id %}';" class="btn-reply" data-post-id="{{ node.id }}" >
+                                    Delete
+                                </button>
+                                {% endif %}
                         </div>
                     </div>
                 </div>
@@ -126,7 +131,9 @@
                         </div>
                         <div class="comment-main">
                             <div class="comment-top">
-                                {{node.commentator}}
+                                <a href="{% url 'accounts:profile-overview' node.commentator %}">
+                                    {{node.commentator}}
+                                </a>
                                 <span class="comment-points">
                                     <span id="comment-point-{{ node.id }}">{{node.votes_count}}</span> points ·
                                 </span>
@@ -144,7 +151,7 @@
                                     </div>
                                     <span>Reply</span>
                                 </button>
-                                {% if node|is_comment:request.user %}
+                                {% if request.user.username == node.commentator.username %}
                                 <button class="btn-reply btn-delete" data-comment-id="{{ node.id }}" >
                                     Delete
                                 </button>

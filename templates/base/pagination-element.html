@@ -1,0 +1,35 @@
+{% if page_obj %}
+    <div class="pagination">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1"><button class="nav-btn page">First</button></a>
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}"><button class="nav-btn page">Previous</button></a>
+            {% endif %}
+            <span class="page-current nav-btn page">
+                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+            {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}"><button class="nav-btn page">Next</button></a>
+                <a href="?page={{ page_obj.paginator.num_pages }}"><button class="nav-btn page">Last</button></a>
+            {% endif %}
+        </span>
+    </div>
+{% else %}
+    <div class="pagination">
+        <span class="page-links">
+            {% if posts.has_previous %}
+                <a href="?page=1"><button class="nav-btn page">First</button></a>
+                <a href="{{ request.path }}?page={{ posts.previous_page_number }}"><button class="nav-btn page">Previous</button></a>
+            {% endif %}
+            <span class="page-current nav-btn page">
+                {{ posts.number }} of {{ posts.paginator.num_pages }}
+            </span>
+            {% if posts.has_next %}
+                <a href="{{ request.path }}?page={{ posts.next_page_number }}"><button class="nav-btn page">Next</button></a>
+                <a href="?page={{ posts.paginator.num_pages }}"><button class="nav-btn page">Last</button></a>
+            {% endif %}
+        </span>
+    </div>
+
+{% endif %}
+

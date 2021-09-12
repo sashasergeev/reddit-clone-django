@@ -16,6 +16,7 @@ from .views import (
     PostDownvoteHandle,
     CommentUpvoteHandle,
     CommentDownvoteHandle,
+    DeletePost,
     DeleteComment,
 )
 
@@ -38,8 +39,10 @@ urlpatterns = [
     path("comment-downvote/<int:pk>/", CommentDownvoteHandle, name="downvote-comment"),
     # JOIN / LEAVE SUBREDDIT - used with fetch API
     path("join/<int:pk>/", SubJoin, name="sub-join"),
+    # delete post
+    path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-sub"),
     # delete comment -- used with fetch API
-    path("comment/<int:pk>/", DeleteComment, name="delete-comment")
+    path("comment/<int:pk>/", DeleteComment, name="delete-comment"),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

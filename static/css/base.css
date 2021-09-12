@@ -175,7 +175,7 @@ nav svg {
 .nav-dropdown-content {
     display: none;
     position: fixed;
-    width: 215px;
+    width: 251px;
     right: 20px;
     top: 40px;
     background: rgb(26, 26, 27);
@@ -312,6 +312,13 @@ nav svg {
     color: #d7dadc5e;
     padding-top: 4px;
 }
-
+.user-nav {
+    height: 21px;
+    width:21px;
+    border-radius: 4px;
+    margin: 0px 10px 0px 5px;
+    border: 1px solid #343536;
+    display: block;
+}
 
 

@@ -1,0 +1,81 @@
+section {
+    height: 100vh;
+    background: #1a1a1b;
+}
+.section-title {
+    padding: 14px 14px 14px;
+    border-bottom: 1px solid #343536;
+    font-weight: 500;
+    font-size: 18px;
+}
+.setting-title {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+    color: #d7dadc;
+    padding: 40px 0;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+}
+.settings {
+    max-width: 688px;
+    flex: 1 1 auto;
+}
+.settings-part {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    line-height: 12px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #343536;
+    color: #818384;
+    margin-bottom: 32px;
+    padding-bottom: 6px;
+}
+.label {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 20px;
+    color: #d7dadc;
+    display: flex;
+    margin-bottom: 4px;
+}
+.label-desc {
+    font-weight: 400;
+    color: #818384;
+
+}
+.textarea-about {
+    margin-top: 12px;
+    resize: both;
+    width: 697px;
+    height: 75px;
+    background-color: #1a1a1b;
+    border: 1px solid #343536;
+    border-radius: 4px;
+    padding: 8px;
+    color: #d7dadc;
+
+}
+.form-post-btn {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 4px;
+    border: 0px;
+    cursor: pointer;
+    line-height: 24px;
+    font-size: 12px;
+    background: rgb(215, 218, 220);
+    color: rgb(26, 26, 27);
+    padding: 3px 16px;
+    display: block;
+    margin-top: 16px;
+    margin-left: auto;
+}
+.form-post-btn:hover {
+    background: rgb(235, 236, 237);
+}

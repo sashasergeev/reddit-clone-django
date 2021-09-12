@@ -1,0 +1,63 @@
+{% load main_tags %}
+
+<div class="post">
+    <div class="vote-part">
+        <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+            <div class="post-upvote-btn">
+                <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+            </div>
+        </button>
+        <div id="votes-on-{{ item.id }}"  class="post-votes">{{ item.votes_count }}</div>
+        <button id="downvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+            <div class="post-downvote-btn">
+                <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
+            </div>
+        </button>
+    </div>
+    <div class="post-part">
+        <div class="top-line sub-h-l">
+            <span class="top-line-subreddit sub-h-l">
+                <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
+                <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
+                
+            </span>
+            Posted by
+            <a class="top-line-username" style="color: rgb(129, 131, 132);" href="{% url 'accounts:profile-overview' item.creator.username %}">
+                u/{{item.creator.username}}
+            </a>
+            <span>
+                {{item.whenpublished}}
+            </span>
+        </div>
+        <a href="{% url 'main:post-detail' item.sub.name item.pk %}">
+            <h3 class="post-title">
+                {{item.title}}
+            </h3>
+        </a>
+        {% if item.post_type == 'IP' %}
+        <div class="post-description " style="max-height: none;">
+            <img class="post-img" src="{{ item.image.url }}" style="max-width: 380px; display: block; margin: 10px auto;">
+        </div>
+        {% else %}
+        <div class="post-description index-des" style="max-height: none;">
+            <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px; max-height: 200px;">{{item.text}}</p>
+        </div>
+        {% endif %}
+
+        <div class="post-comment-section">
+            <div class="comments-line">
+                <a href="{% url 'main:post-detail' item.sub.name item.pk %}">
+                    <span class="comment-svg">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
+                    </span>
+                    <span style="color: rgb(129, 131, 132);">
+                        {{item.comment_count}} Comments
+
+                    </span>
+                </a>
+            </div>
+        </div>
+        
+
+    </div>
+</div>
