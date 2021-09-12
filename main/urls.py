@@ -5,18 +5,18 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from .views import (
-    CommentDownvoteHandle,
-    CommentUpvoteHandle,
-    DeleteComment,
     IndexListView,
-    PostDetailPage,
-    PostDownvoteHandle,
-    PostUpvoteHandle,
-    SubJoin,
-    subredditDetailPage,
     CreatePost,
     CreatePostIn,
-    CreateSubreddit
+    CreateSubreddit,
+    subredditDetailPage,
+    SubJoin,
+    PostDetailPage,
+    PostUpvoteHandle,
+    PostDownvoteHandle,
+    CommentUpvoteHandle,
+    CommentDownvoteHandle,
+    DeleteComment,
 )
 
 app_name = "main"

@@ -80,11 +80,6 @@ class Post(models.Model):
         downvotes = self.post_downvote.count()
         return upvotes - downvotes
 
-    def children(self):
-        children_comms = self.comment_set.filter(parent=None)
-        children_comms = children_comms.get_descendants(include_self=True)
-        return children_comms
-
     def get_absolute_url(self):
         return f"/r/{self.sub.name}/{self.id}/"
 

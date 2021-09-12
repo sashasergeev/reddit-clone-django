@@ -3,7 +3,7 @@
 {% load main_tags %}
 
 {% block title %}
-    r/{{ user.username }} - Reddit CLone
+    u/{{ user.username }} - Reddit CLone
 {% endblock title %}
 
 {% block statics %}
@@ -115,6 +115,21 @@
             {% empty %}
             <h1>He didn't post anything yet</h1>
             {% endfor %}
+            <div class="pagination">
+                <span class="page-links">
+                    {% if feed.has_previous %}
+                        <a href="?page=1"><button class="nav-btn page">First</button></a>
+                        <a href="{{ request.path }}?page={{ feed.previous_page_number }}"><button class="nav-btn page">Previous</button></a>
+                    {% endif %}
+                    <span class="page-current nav-btn page">
+                        {{ feed.number }} of {{ feed.paginator.num_pages }}
+                    </span>
+                    {% if feed.has_next %}
+                        <a href="{{ request.path }}?page={{ feed.next_page_number }}"><button class="nav-btn page">Next</button></a>
+                        <a href="?page={{ feed.paginator.num_pages }}"><button class="nav-btn page">Last</button></a>
+                    {% endif %}
+                </span>
+            </div>
         </div>
         <aside class="sidebar">
             <div class="sidebar-box">

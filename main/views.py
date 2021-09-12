@@ -18,6 +18,7 @@ from .forms import CommentForm
 
 from accounts.models import Profile
 
+
 # Create your views here.
 
 
@@ -34,7 +35,7 @@ class IndexListView(generic.ListView):
 
 def subredditDetailPage(request, name):
     subreddit = Subreddit.objects.get(name=name)
-    posts = subreddit.posts.all()
+    posts = subreddit.posts.prefetch_related("post_upvote", "post_downvote").all()
 
     paginator = Paginator(posts, 10)
     page_number = request.GET.get("page")
@@ -57,11 +58,14 @@ def PostDetailPage(request, name, pk):
     else:
         form = CommentForm()
 
-    # generic page rendering
+    # main page rendering
     subreddit = Subreddit.objects.get(name=name)
     post = get_object_or_404(subreddit.posts, pk=pk)
-
-    context = {"subreddit": subreddit, "post": post, "form": form}
+    comments = post.comment_set.filter(parent=None)
+    comments = comments.get_descendants(include_self=True).prefetch_related(
+        "comment_upvote", "comment_downvote"
+    )
+    context = {"subreddit": subreddit, "post": post, "comments": comments, "form": form}
 
     return render(request, "main/post-detail.html", context)
 
@@ -241,8 +245,8 @@ class CreatePost(LoginRequiredMixin, generic.edit.CreateView):
         form.fields["image"].widget.attrs = {
             "class": "form_inputs",
         }
-        form.fields['text'].required = False
-        form.fields['image'].required = False
+        form.fields["text"].required = False
+        form.fields["image"].required = False
         return form
 
     def get_context_data(self, **kwargs):
@@ -284,8 +288,8 @@ class CreatePostIn(LoginRequiredMixin, generic.edit.CreateView):
         form.fields["post_type"].widget.attrs = {
             "class": "form_inputs",
         }
-        form.fields['text'].required = False
-        form.fields['image'].required = False
+        form.fields["text"].required = False
+        form.fields["image"].required = False
         return form
 
     def get_context_data(self, **kwargs):
@@ -311,8 +315,9 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
             form_class = self.get_form_class()
 
         form = super(CreateSubreddit, self).get_form(form_class)
-        form.fields['image'].required = False
+        form.fields["image"].required = False
         return form
+
 
 # delete comment - JavaScript
 def DeleteComment(request, pk):

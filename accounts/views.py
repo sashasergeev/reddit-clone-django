@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from django.core.paginator import Paginator
 
 from itertools import chain
 from main.models import Post
@@ -56,10 +57,14 @@ def MainProfile(request, username):
     feed = sorted(
         chain(posts, comments), key=lambda data: data.created_at, reverse=True
     )
+    paginator = Paginator(feed, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "profile/main.html",
-        {"user": user, "feed": feed, "current": "overview"},
+        {"user": user, "feed": page_obj, "current": "overview"},
     )
 
 
@@ -67,10 +72,14 @@ def PostsProfile(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.post_set.order_by("-created_at")
 
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "profile/main.html",
-        {"user": user, "feed": posts, "current": "posts"},
+        {"user": user, "feed": page_obj, "current": "posts"},
     )
 
 
@@ -78,10 +87,14 @@ def CommentsProfile(request, username):
     user = get_object_or_404(User, username=username)
     comments = user.comment_set.order_by("-created_at")
 
+    paginator = Paginator(comments, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "profile/main.html",
-        {"user": user, "feed": comments, "current": "comments"},
+        {"user": user, "feed": page_obj, "current": "comments"},
     )
 
 
@@ -89,10 +102,14 @@ def UpvotedProfile(request, username):
     user = get_object_or_404(User, username=username)
     upvoted = Post.objects.filter(post_upvote__user__username=username)
 
+    paginator = Paginator(upvoted, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "profile/main.html",
-        {"user": user, "feed": upvoted, "current": "upvoted"},
+        {"user": user, "feed": page_obj, "current": "upvoted"},
     )
 
 
@@ -100,8 +117,12 @@ def DownvotedProfile(request, username):
     user = get_object_or_404(User, username=username)
     downvoted = Post.objects.filter(post_downvote__user__username=username)
 
+    paginator = Paginator(downvoted, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     return render(
         request,
         "profile/main.html",
-        {"user": user, "feed": downvoted, "current": "downvoted"},
+        {"user": user, "feed": page_obj, "current": "downvoted"},
     )

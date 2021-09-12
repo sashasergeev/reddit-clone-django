@@ -93,7 +93,7 @@
                     <div class="post-comment">
                         <form action="" method="post">
                             {% csrf_token %}
-                            {{form.as_p}}
+                            <textarea name="text" cols="80" rows="10" class="post-comment-textarea" placeholder="What are your thoughts?" required="" id="id_text"></textarea>
                             <div class="post-comment-lowerline">
                                 <button class="post-comment-btn">COMMENT</button>
                             </div>
@@ -110,7 +110,7 @@
                 </div>
 
                 <div class="comment-section">
-                    {% recursetree post.children %}
+                    {% recursetree comments %}
                     <div id="comment-{{node.id}}" class="comment">
                         <div class="comment-vote">
                             <button id="comment-upvote-{{node.id}}" class="comment-upvote" data-comment-id="{{ node.id }}" {% if node|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
