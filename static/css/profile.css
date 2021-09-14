@@ -5,7 +5,6 @@
     width: 100%;
     text-transform: uppercase;
     align-items: center;
-    height: 39px;
     justify-content: space-between;
     left: 20px;
     padding: 0px 300px;
@@ -148,16 +147,14 @@
         padding: 0px 100px;
     }
 }
-@media (max-width: 1200px) {
-    .profile-header {
-        font-size: 700;
-        padding: 0px 100px;
-    }
-}
 @media (max-width: 700px) {
     .profile-header {
         font-size: 700;
         padding: 0px 0px;
+        flex-wrap: wrap;    
+    }
+    .comment {
+        margin: 7px;
     }
 }
 

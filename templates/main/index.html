@@ -10,7 +10,13 @@ Reddit CLone - Dive into something
 
 
 {% block content %}
-
+    {% if messages %}
+        {% for message in messages %}
+            {% with action="logged_in" %}
+                {% include 'base/message-succ-saved.html' %}
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
 
     <main class="main">
         <div class="post-list">

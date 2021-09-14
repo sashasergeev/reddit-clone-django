@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    Login : Reddit CLone
+    Sign Up : Reddit CLone
 {% endblock title %}
 
 {% block statics %}<link rel="stylesheet" type="text/css" href="{% static 'css/login.css' %}">{% endblock statics %}
@@ -11,7 +11,9 @@
 {% block content %}
 
     {% if form.errors %}
-      <p>Your username and password didn't match. Please try again.</p>
+        {% with action="error" message="Your username and password didn't match. Please try again." %}
+            {% include 'base/message-succ-saved.html' %}
+        {% endwith %}
     {% endif %}
 
     {% if next %}

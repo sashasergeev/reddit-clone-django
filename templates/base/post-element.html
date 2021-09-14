@@ -16,11 +16,12 @@
     </div>
     <div class="post-part">
         <div class="top-line sub-h-l">
-            <span class="top-line-subreddit sub-h-l">
-                <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
-                <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
-                
-            </span>
+            {% if not subreddit %} <!-- excludes name of the sub if this is the subreddit page -->
+                <span class="top-line-subreddit sub-h-l">
+                    <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
+                    <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
+                </span>
+            {% endif %}
             Posted by
             <a class="top-line-username" style="color: rgb(129, 131, 132);" href="{% url 'accounts:profile-overview' item.creator.username %}">
                 u/{{item.creator.username}}

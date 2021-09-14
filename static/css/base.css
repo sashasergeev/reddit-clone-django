@@ -172,16 +172,16 @@ nav svg {
     color: rgb(129, 131, 132);
 }
 
-.nav-dropdown-content {
+.dropdown-login-content {
     display: none;
     position: fixed;
     width: 251px;
     right: 20px;
     top: 40px;
+    border-bottom: 1px solid rgb(52, 53, 54);
     background: rgb(26, 26, 27);
     border-radius: 0px 0px 4px 4px;
     border-right: 1px solid rgb(52, 53, 54);
-    border-bottom: 1px solid rgb(52, 53, 54);
     border-left: 1px solid rgb(52, 53, 54);
     border-image: initial;
     border-top: none;
@@ -209,13 +209,28 @@ nav svg {
     border-image: initial;
     border-top: none;
 }
-
-.user-dropdown:hover .nav-dropdown-content {
+.profile-menu {
+    display: none;
+    position: fixed;
+    width: 251px;
+    right: 20px;
+    top: 40px;
+    background: rgb(26, 26, 27);
+    border-radius: 0px 0px 4px 4px;
+    border-right: 1px solid rgb(52, 53, 54);
+    border-bottom: 1px solid rgb(52, 53, 54);
+    border-left: 1px solid rgb(52, 53, 54);
+    border-image: initial;
+    border-top: none;
+}
+.user-dropdown:hover .profile-menu {
     display: block;
 }
 .nav-location:hover .dropdown-location {
     display: block;
-
+}
+.login-drop-container:hover .dropdown-login-content {
+    display: block;
 }
 .nav-dropdown {
     border-bottom: none;
@@ -254,20 +269,35 @@ nav svg {
     height: 1px;
     width: 214px;
 }
-
+.location {
+    width: 270px;
+}
 @media screen and (max-width: 1024px) {
-    .nav-username {
-        max-width: 60px;
-    }
+
     .nav-karma {
         display: none;
     }
+    .nav-currentLocation {
+        display: none;
+    }
+
+    .location {
+        padding: 0px;
+        width: 58px;
+    }
 }
 @media screen and (max-width: 768px) {
-    .location {
-        max-width: 100px;
-        padding: 0px;
-        overflow: hidden;
+    .nav-username span {
+        display: none;
+    }
+    .nav-dropdown-btn {
+        width: 74px;
+    }
+    .loc-padd {
+        padding-left: 10px;
+    }
+    .nav-create-post-btn {
+        display: none;
     }
 }
 
@@ -276,9 +306,7 @@ nav svg {
     color: rgb(0, 204, 153);
 }
 
-.location {
-    width: 270px;
-}
+
 .nav-currentLocation {
     font-weight: 600;
     font-size: 14px;
@@ -289,6 +317,7 @@ nav svg {
     margin-right: 8px;
     color: #59d663;
 }
+
 
 @media (max-width: 1024px) {
     .logo {
@@ -322,3 +351,17 @@ nav svg {
 }
 
 
+.login-dropdown {
+    display: flex;
+    width: 100px;
+    display: none;
+}
+
+@media screen and (max-width:900px) {
+    .nav-buttons {
+        display: none;
+    }
+    .login-dropdown {
+        display: flex;
+    }
+}

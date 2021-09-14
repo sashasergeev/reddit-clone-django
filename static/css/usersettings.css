@@ -59,8 +59,13 @@ section {
     border-radius: 4px;
     padding: 8px;
     color: #d7dadc;
-
 }
+@media screen and (max-width: 750px) {
+    .textarea-about {
+        width: 330px;
+    }
+}
+
 .form-post-btn {
     font-weight: 700;
     letter-spacing: 0.5px;
