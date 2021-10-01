@@ -313,8 +313,9 @@ nav svg {
     top: 45px;
     padding: 5px;
     min-width: 200px;
-    max-width: 400px
-
+    max-width: 400px;
+    border: 1px solid rgb(52, 53, 54);
+    border-radius: 4px 4px 4px 4px;
 }
 .notification-badge { 
     right: 285px;

@@ -16,8 +16,11 @@
 					</div>
 				{% elif n.notification_type == 3 %}
 					<div class="notification-item">
-						<a href="{% url "main:post-notification" n.pk n.post.pk %}">{{ n.from_user.username }} commented your post.</a>
-						<span class="notification-item-close">&times;</span>
+						<a href="{% url "main:post-notification" n.pk n.post.pk %}">
+							u/{{ n.from_user.username }} commented on your post in r/{{ n.post.sub.name }} · 
+							<span class="notification-gray">{{ n.post.whenpublished }}</span>
+							<div style="margin-top: 10px; color: #818384;">{{ n.post.text }}</div>
+						</a>
 					</div>
 				{% endif %}
 			{% elif n.comment %}	
