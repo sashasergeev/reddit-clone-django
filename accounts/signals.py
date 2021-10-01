@@ -18,10 +18,12 @@ def create_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=CommentDownVote)
 def karma_post_upvote_add(sender, instance, created, **kwargs):
     if isinstance(instance, PostsUpVotes) or isinstance(instance, PostsDownVotes):
+        # CHECK TO REMOVE ABILITY TO GIVE KARMA TO YOURSELF
         if instance.user == instance.post.creator:
             return
         profile = instance.post.creator.profile
     else:
+        # CHECK TO REMOVE ABILITY TO GIVE KARMA TO YOURSELF
         if instance.user == instance.comment.commentator:
             return
         profile = instance.comment.commentator.profile
@@ -46,10 +48,12 @@ def karma_post_upvote_add(sender, instance, created, **kwargs):
 @receiver(post_delete, sender=CommentDownVote)
 def karma_post_upvote_delete(sender, instance, **kwargs):
     if isinstance(instance, PostsUpVotes) or isinstance(instance, PostsDownVotes):
+        # CHECK TO REMOVE ABILITY TO GIVE KARMA TO YOURSELF
         if instance.user == instance.post.creator:
             return
         profile = instance.post.creator.profile
     else:
+        # CHECK TO REMOVE ABILITY TO GIVE KARMA TO YOURSELF
         if instance.user == instance.comment.commentator:
             return
         profile = instance.comment.commentator.profile

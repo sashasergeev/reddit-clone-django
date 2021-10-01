@@ -9,6 +9,7 @@ from .views import (
     CreatePost,
     CreatePostIn,
     CreateSubreddit,
+    PostCommentReplyNotification,
     subredditDetailPage,
     SubJoin,
     PostDetailPage,
@@ -43,6 +44,12 @@ urlpatterns = [
     path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-sub"),
     # delete comment -- used with fetch API
     path("comment/<int:pk>/", DeleteComment, name="delete-comment"),
+    # Post Notifications - votes - comments
+    path(
+        "notifications/<int:notification_pk>/post/<int:post_pk>",
+        PostCommentReplyNotification.as_view(),
+        name="post-notification",
+    ),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

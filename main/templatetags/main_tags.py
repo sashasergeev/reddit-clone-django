@@ -2,7 +2,13 @@ from django import template
 
 register = template.Library()
 
-from ..models import PostsUpVotes, PostsDownVotes, CommentUpVote, CommentDownVote
+from ..models import (
+    PostsUpVotes,
+    PostsDownVotes,
+    CommentUpVote,
+    CommentDownVote,
+    Notifications,
+)
 
 
 # CHECK IF POST UPVOTED
@@ -33,3 +39,15 @@ def check_relation_comm_upvote(comment, user):
 @register.filter(name="check_relation_comm_downvote")
 def check_relation_comm_downvote(comment, user):
     return comment.comment_downvote.filter(user=user.id).exists()
+
+
+# NOTIFICATIONS
+@register.inclusion_tag("base/show_notifications.html", takes_context=True)
+def show_notifications(context):
+    request_user = context["request"].user
+    notifications = (
+        Notifications.objects.filter(to_user=request_user)
+        .exclude(user_has_seen=True)
+        .order_by("-date")
+    )
+    return {"notifications": notifications}

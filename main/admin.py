@@ -7,6 +7,7 @@ from .models import (
     Comment,
     PostsUpVotes,
     PostsDownVotes,
+    Notifications,
 )
 
 # Register your models here.
@@ -18,3 +19,4 @@ admin.site.register(PostsUpVotes)
 admin.site.register(PostsDownVotes)
 admin.site.register(CommentUpVote)
 admin.site.register(CommentDownVote)
+admin.site.register(Notifications)

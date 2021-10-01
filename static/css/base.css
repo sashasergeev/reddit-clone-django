@@ -90,25 +90,24 @@ nav svg {
     color: rgb(215, 218, 220);
     border: 1px solid rgb(215, 218, 220);
 }
-.login {
+
+.login, .signup {
     width: 120px;
     padding: 3px 16px;
+}
+.signup {
+    margin-left: 16px;
+    background: rgb(215, 218, 220);
+    color: rgb(26, 26, 27);
 }
 .login:hover {
     border-color: rgb(235, 236, 237);
     color: rgb(235, 236, 237);
 }
-.signup {
-    width: 120px;
-    padding: 3px 16px;
-    margin-left: 16px;
-    background: rgb(215, 218, 220);
-    color: rgb(26, 26, 27);
-}
 .signup:hover {
     background: rgb(235, 236, 237);
-
 }
+
 .pagination {
     text-align: center;
     width: 100%;
@@ -172,19 +171,26 @@ nav svg {
     color: rgb(129, 131, 132);
 }
 
-.dropdown-login-content {
+.dropdown-login-content,
+.dropdown-location,
+.profile-menu,
+.dropdown-notifications {
     display: none;
     position: fixed;
+    background: rgb(26, 26, 27);
+    border-radius: 0px 0px 4px 4px;
+    border-right: 1px solid rgb(52, 53, 54);
+    border-bottom: 1px solid rgb(52, 53, 54);
+    border-left: 1px solid rgb(52, 53, 54);
+    border-image: initial;
+    border-top: none;
+}
+
+.dropdown-login-content {
     width: 251px;
     right: 20px;
     top: 40px;
     border-bottom: 1px solid rgb(52, 53, 54);
-    background: rgb(26, 26, 27);
-    border-radius: 0px 0px 4px 4px;
-    border-right: 1px solid rgb(52, 53, 54);
-    border-left: 1px solid rgb(52, 53, 54);
-    border-image: initial;
-    border-top: none;
 }
 .nav-dropdown-content a {
     float: none;
@@ -196,48 +202,28 @@ nav svg {
     overflow: visible;
 }
 .dropdown-location {
-    display: none;
-    position: fixed;
     width: 270px;
     left: 134px;
     top: 40px;
-    background: rgb(26, 26, 27);
-    border-radius: 0px 0px 4px 4px;
-    border-right: 1px solid rgb(52, 53, 54);
-    border-bottom: 1px solid rgb(52, 53, 54);
-    border-left: 1px solid rgb(52, 53, 54);
-    border-image: initial;
-    border-top: none;
 }
 .profile-menu {
-    display: none;
-    position: fixed;
     width: 251px;
     right: 20px;
     top: 40px;
-    background: rgb(26, 26, 27);
-    border-radius: 0px 0px 4px 4px;
-    border-right: 1px solid rgb(52, 53, 54);
-    border-bottom: 1px solid rgb(52, 53, 54);
-    border-left: 1px solid rgb(52, 53, 54);
-    border-image: initial;
-    border-top: none;
 }
-.user-dropdown:hover .profile-menu {
-    display: block;
-}
-.nav-location:hover .dropdown-location {
-    display: block;
-}
+
+.user-dropdown:hover .profile-menu,
+.nav-location:hover .dropdown-location,
 .login-drop-container:hover .dropdown-login-content {
     display: block;
 }
+
 .nav-dropdown {
     border-bottom: none;
 }
 .nav-dropdown-title {
     margin: 8px 6px 4px;
-    font-size: 10px;
+    font-size: 11px;
     color: rgb(129, 131, 132);
 }
 .nav-dropdown-profile {
@@ -272,40 +258,10 @@ nav svg {
 .location {
     width: 270px;
 }
-@media screen and (max-width: 1024px) {
-
-    .nav-karma {
-        display: none;
-    }
-    .nav-currentLocation {
-        display: none;
-    }
-
-    .location {
-        padding: 0px;
-        width: 58px;
-    }
-}
-@media screen and (max-width: 768px) {
-    .nav-username span {
-        display: none;
-    }
-    .nav-dropdown-btn {
-        width: 74px;
-    }
-    .loc-padd {
-        padding-left: 10px;
-    }
-    .nav-create-post-btn {
-        display: none;
-    }
-}
-
 
 .upvoted {
     color: rgb(0, 204, 153);
 }
-
 
 .nav-currentLocation {
     font-weight: 600;
@@ -318,15 +274,6 @@ nav svg {
     color: #59d663;
 }
 
-
-@media (max-width: 1024px) {
-    .logo {
-        display: none;
-    }
-    .dropdown-location {
-        left: 60px;
-    }
-}
 .nav-feeds {
     color: #59d663;
 }
@@ -334,6 +281,11 @@ nav svg {
 .nav-create-post-btn {
     height: 22px;
     margin-right:  8px;
+    width: 30px;
+}
+.nav-create-post-btn:hover {
+    outline: none;
+    background: #d7dadc1a;
 }
 
 .nav-karma {
@@ -350,11 +302,40 @@ nav svg {
     display: block;
 }
 
-
 .login-dropdown {
     display: flex;
     width: 100px;
     display: none;
+}
+
+.dropdown-notifications {
+    position: fixed;
+    top: 45px;
+    padding: 5px;
+    min-width: 200px;
+    max-width: 400px
+
+}
+.notification-badge { 
+    right: 285px;
+    top: 10px;
+    position: absolute;
+    background: rgb(201, 30, 44);
+    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+.notification-item {
+    padding: 7px;
+    font-weight: 500;
+    font-size: 14px;
+    border-bottom: 1px dashed #ffffff1f;
+}
+.notification-gray {
+    color: #818384;
 }
 
 @media screen and (max-width:900px) {
@@ -363,5 +344,40 @@ nav svg {
     }
     .login-dropdown {
         display: flex;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .nav-karma {
+        display: none;
+    }
+    .nav-currentLocation {
+        display: none;
+    }
+    .location {
+        padding: 0px;
+        width: 58px;
+    }
+    .logo {
+        display: none;
+    }
+    .dropdown-location {
+        left: 60px;
+    }
+}
+@media screen and (max-width: 768px) {
+    .nav-username span {
+        display: none;
+    }
+    .nav-dropdown-btn {
+        width: 74px;
+    }
+    .loc-padd {
+        padding-left: 10px;
+    }
+    .nav-create-post-btn {
+        display: none;
+    }
+    .notification-badge {
+        display: none;
     }
 }

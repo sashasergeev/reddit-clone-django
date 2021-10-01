@@ -1,0 +1,48 @@
+<span class="notification-badge">{{ notifications.count }}</span>
+<div class="dropdown-notifications" id="notification_container" style="display: none;">
+	<div class="dropdown-notifications-content">
+		<h3 class="nav-dropdown-title" style="font-size: 13px;">NOTIFICATIONS</h3>
+    {% for n in notifications %} 
+			{% if n.post %} 
+				{% if n.notification_type == 1 %}
+					<div class="notification-item">
+						<a href="{% url "main:post-notification" n.pk n.post.pk %}">{{ n.from_user.username }} upvoted your post.</a>
+						<span class="notification-item-close">&times;</span>
+					</div>
+				{% elif n.notification_type == 2 %}
+					<div class="notification-item">
+						<a href="{% url "main:post-notification" n.pk n.post.pk %}">{{ n.from_user.username }} downvoted your post.</a>
+						<span class="notification-item-close">&times;</span>
+					</div>
+				{% elif n.notification_type == 3 %}
+					<div class="notification-item">
+						<a href="{% url "main:post-notification" n.pk n.post.pk %}">{{ n.from_user.username }} commented your post.</a>
+						<span class="notification-item-close">&times;</span>
+					</div>
+				{% endif %}
+			{% elif n.comment %}	
+				{% if n.notification_type == 1 %}
+					<div class="notification-item">
+						<a href="#">{{ n.from_user.username }} upvoted your comment</a>
+						<span class="notification-item-close">&times;</span>
+					</div>
+				{% elif n.notification_type == 2 %}
+					<div class="notification-item">
+						<a href="#">{{ n.from_user.username }} downvoted your comment.</a>
+						<span class="notification-item-close">&times;</span>
+					</div>
+				{% elif n.notification_type == 3 %}
+					<div class="notification-item">
+						<a href="{% url "main:post-notification" n.pk n.comment.post.pk %}">
+							u/{{ n.from_user.username }} replied to your comment in r/{{ n.comment.post.sub.name }} · 
+							<span class="notification-gray">{{ n.comment.whenpublished }}</span>
+							<div style="margin-top: 10px; color: #818384;">{{ n.comment.text }}</div>
+						</a>
+					</div>
+				{% endif %}
+			{% endif %}
+		{% empty %}
+			No Notifications
+		{% endfor %}
+  </div>
+</div>

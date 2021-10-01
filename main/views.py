@@ -1,6 +1,6 @@
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views import generic
+from django.views import generic, View
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,6 +16,7 @@ from .models import (
     PostsUpVotes,
     PostsDownVotes,
     Comment,
+    Notifications,
 )
 
 
@@ -27,7 +28,7 @@ class IndexListView(generic.ListView):
     template_name = "main/index.html"
     paginate_by = 10
     context_object_name = "posts"
-    
+
     def get_context_data(self, **kwargs):
         context = super(IndexListView, self).get_context_data(**kwargs)
         context["sub_list"] = Subreddit.objects.order_by("name")[:5]
@@ -69,6 +70,16 @@ def PostDetailPage(request, name, pk):
     context = {"subreddit": subreddit, "post": post, "comments": comments, "form": form}
 
     return render(request, "main/post-detail.html", context)
+
+
+class PostCommentReplyNotification(View):
+    def get(self, request, notification_pk, post_pk, *args, **kwargs):
+        notification = Notifications.objects.get(pk=notification_pk)
+        post = Post.objects.get(pk=post_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+        return redirect(reverse("main:post-detail", args=(post.sub.name, post_pk)))
 
 
 # POST VOTES - JavaScript
