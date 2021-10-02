@@ -7,15 +7,82 @@ from mptt.models import MPTTModel, TreeForeignKey
 from PIL import Image
 import math
 
-# Create your models here.
 
-
+# FUNCTIONS AND MIXINS
 def upload_image_rename(instance, filename):
     print(filename)
     filebase, extenstion = filename.split(".")
     return "images/subreddit/%s.%s" % (instance.name, extenstion)
 
 
+class TimeStampMixin(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        abstract = True
+
+    def whenpublished(self):
+        now = timezone.now()
+
+        diff = now - self.created_at
+
+        if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
+            seconds = diff.seconds
+
+            if seconds == 1:
+                return str(seconds) + " second ago"
+
+            else:
+                return str(seconds) + " seconds ago"
+
+        if diff.days == 0 and diff.seconds >= 60 and diff.seconds < 3600:
+            minutes = math.floor(diff.seconds / 60)
+
+            if minutes == 1:
+                return str(minutes) + " minute ago"
+
+            else:
+                return str(minutes) + " minutes ago"
+
+        if diff.days == 0 and diff.seconds >= 3600 and diff.seconds < 86400:
+            hours = math.floor(diff.seconds / 3600)
+
+            if hours == 1:
+                return str(hours) + " hour ago"
+
+            else:
+                return str(hours) + " hours ago"
+
+        # 1 day to 30 days
+        if diff.days >= 1 and diff.days < 30:
+            days = diff.days
+
+            if days == 1:
+                return str(days) + " day ago"
+
+            else:
+                return str(days) + " days ago"
+
+        if diff.days >= 30 and diff.days < 365:
+            months = math.floor(diff.days / 30)
+
+            if months == 1:
+                return str(months) + " month ago"
+
+            else:
+                return str(months) + " months ago"
+
+        if diff.days >= 365:
+            years = math.floor(diff.days / 365)
+
+            if years == 1:
+                return str(years) + " year ago"
+
+            else:
+                return str(years) + " years ago"
+
+
+# MODELS
 class Subreddit(models.Model):
     name = models.CharField(max_length=150)
     members = models.ManyToManyField(User, related_name="sub_members")
@@ -49,12 +116,11 @@ class Subreddit(models.Model):
             img.save(self.image.path)  # saving image at the same path
 
 
-class Post(models.Model):
+class Post(TimeStampMixin):
     title = models.CharField(max_length=100)
     text = models.TextField(max_length=5000, blank=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     sub = models.ForeignKey(Subreddit, related_name="posts", on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to="images/post/", null=True, blank=True)
 
     # CHOICES FOR POST TYPE
@@ -83,71 +149,11 @@ class Post(models.Model):
     def get_absolute_url(self):
         return f"/r/{self.sub.name}/{self.id}/"
 
-    def whenpublished(self):
-        now = timezone.now()
 
-        diff = now - self.created_at
-
-        if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
-            seconds = diff.seconds
-
-            if seconds == 1:
-                return str(seconds) + " second ago"
-
-            else:
-                return str(seconds) + " seconds ago"
-
-        if diff.days == 0 and diff.seconds >= 60 and diff.seconds < 3600:
-            minutes = math.floor(diff.seconds / 60)
-
-            if minutes == 1:
-                return str(minutes) + " minute ago"
-
-            else:
-                return str(minutes) + " minutes ago"
-
-        if diff.days == 0 and diff.seconds >= 3600 and diff.seconds < 86400:
-            hours = math.floor(diff.seconds / 3600)
-
-            if hours == 1:
-                return str(hours) + " hour ago"
-
-            else:
-                return str(hours) + " hours ago"
-
-        # 1 day to 30 days
-        if diff.days >= 1 and diff.days < 30:
-            days = diff.days
-
-            if days == 1:
-                return str(days) + " day ago"
-
-            else:
-                return str(days) + " days ago"
-
-        if diff.days >= 30 and diff.days < 365:
-            months = math.floor(diff.days / 30)
-
-            if months == 1:
-                return str(months) + " month ago"
-
-            else:
-                return str(months) + " months ago"
-
-        if diff.days >= 365:
-            years = math.floor(diff.days / 365)
-
-            if years == 1:
-                return str(years) + " year ago"
-
-            else:
-                return str(years) + " years ago"
-
-
-class Comment(MPTTModel):
+class Comment(MPTTModel, TimeStampMixin):
     text = models.TextField()
     commentator = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     parent = TreeForeignKey(
@@ -164,66 +170,6 @@ class Comment(MPTTModel):
         upvotes = self.comment_upvote.count()
         downvotes = self.comment_downvote.count()
         return upvotes - downvotes
-
-    def whenpublished(self):
-        now = timezone.now()
-
-        diff = now - self.created_at
-
-        if diff.days == 0 and diff.seconds >= 0 and diff.seconds < 60:
-            seconds = diff.seconds
-
-            if seconds == 1:
-                return str(seconds) + " second ago"
-
-            else:
-                return str(seconds) + " seconds ago"
-
-        if diff.days == 0 and diff.seconds >= 60 and diff.seconds < 3600:
-            minutes = math.floor(diff.seconds / 60)
-
-            if minutes == 1:
-                return str(minutes) + " minute ago"
-
-            else:
-                return str(minutes) + " minutes ago"
-
-        if diff.days == 0 and diff.seconds >= 3600 and diff.seconds < 86400:
-            hours = math.floor(diff.seconds / 3600)
-
-            if hours == 1:
-                return str(hours) + " hour ago"
-
-            else:
-                return str(hours) + " hours ago"
-
-        # 1 day to 30 days
-        if diff.days >= 1 and diff.days < 30:
-            days = diff.days
-
-            if days == 1:
-                return str(days) + " day ago"
-
-            else:
-                return str(days) + " days ago"
-
-        if diff.days >= 30 and diff.days < 365:
-            months = math.floor(diff.days / 30)
-
-            if months == 1:
-                return str(months) + " month ago"
-
-            else:
-                return str(months) + " months ago"
-
-        if diff.days >= 365:
-            years = math.floor(diff.days / 365)
-
-            if years == 1:
-                return str(years) + " year ago"
-
-            else:
-                return str(years) + " years ago"
 
 
 class PostsUpVotes(models.Model):
@@ -302,7 +248,7 @@ class CommentDownVote(models.Model):
         return f"{self.comment} downvoted by {self.user.username}"
 
 
-class Notifications(models.Model):
+class Notifications(TimeStampMixin):
     # 1 = like 2 = dislike, 3 = post comment - reply
     notification_type = models.IntegerField()
     to_user = models.ForeignKey(
@@ -315,5 +261,4 @@ class Notifications(models.Model):
     comment = models.ForeignKey(
         Comment, on_delete=models.CASCADE, blank=True, null=True
     )
-    date = models.DateTimeField(auto_now_add=True)
     user_has_seen = models.BooleanField(default=False)

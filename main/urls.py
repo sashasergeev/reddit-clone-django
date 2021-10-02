@@ -10,6 +10,8 @@ from .views import (
     CreatePostIn,
     CreateSubreddit,
     PostCommentReplyNotification,
+    CommentNotifications,
+    ClearNotifications,
     subredditDetailPage,
     SubJoin,
     PostDetailPage,
@@ -46,10 +48,16 @@ urlpatterns = [
     path("comment/<int:pk>/", DeleteComment, name="delete-comment"),
     # Post Notifications - votes - comments
     path(
-        "notifications/<int:notification_pk>/post/<int:post_pk>",
+        "notifications/<int:notification_pk>/post/<int:post_pk>/",
         PostCommentReplyNotification.as_view(),
         name="post-notification",
     ),
+    path(
+        "notifications/<int:notification_pk>/comment/<int:comment_pk>/",
+        CommentNotifications.as_view(),
+        name="comment-notification",
+    ),
+    path("notifications/clear/", ClearNotifications.as_view()),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

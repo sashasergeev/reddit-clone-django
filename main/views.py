@@ -82,6 +82,27 @@ class PostCommentReplyNotification(View):
         return redirect(reverse("main:post-detail", args=(post.sub.name, post_pk)))
 
 
+class CommentNotifications(View):
+    def get(self, request, notification_pk, comment_pk, *args, **kwargs):
+        notification = Notifications.objects.get(pk=notification_pk)
+        comment = Comment.objects.get(pk=comment_pk)
+
+        notification.user_has_seen = True
+        notification.save()
+        return redirect(
+            reverse("main:post-detail", args=(comment.post.sub.name, comment.post.pk))
+        )
+
+
+class ClearNotifications(View):
+    def post(self, request, *args, **kwargs):
+        notifications = Notifications.objects.filter(to_user=request.user)
+        for n in notifications:
+            n.user_has_seen = True
+            n.save()
+        return JsonResponse({"Status": "Removed"})
+
+
 # POST VOTES - JavaScript
 def PostUpvoteHandle(request, pk):
     # obtaining needed data

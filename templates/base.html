@@ -103,12 +103,12 @@
         {% if user.is_authenticated %}
 
         <a href="{% if subreddit %} {% url 'main:create-post-in' subreddit.name %} {% else %} {% url 'main:create-post' %} {% endif %}" class="">
-            <span style="display: flex; justify-content: center; align-items: center;">
+            <span class="nav-btns">
                 <svg class="nav-create-post-btn" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" ><path d="M5 15a1 1 0 01-1-1v-2.83a1 1 0 01.29-.7l8.09-8.09a1 1 0 011.41 0l2.83 2.83a1 1 0 010 1.41l-8.08 8.09a1 1 0 01-.71.29zm12 1a1 1 0 010 2H3a1 1 0 010-2z"></path></svg>
             </span>
         </a>
-        <span style="display: flex; justify-content: center; align-items: center; cursor: pointer" onclick="showNotification()">
-            <svg class="nav-create-post-btn" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64" viewBox="0 0 172 172" style=" fill:rgb(215, 218, 220);"><g fill="rgb(215, 218, 220)" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(2.6875,2.6875)"><path d="M30,4c-1.217,0 -2.15247,1.0782 -1.98047,2.2832l0.2832,1.98047c-8.449,0.981 -12.41016,5.33633 -12.41016,9.73633c0,14.747 -4.14488,22.63706 -4.79687,23.78906l41.09961,-1.41602c-1.388,-3.039 -4.08789,-10.47705 -4.08789,-22.37305c0,-4.401 -3.96116,-8.75533 -12.41016,-9.73633l0.2832,-1.98047c0.172,-1.205 -0.76347,-2.2832 -1.98047,-2.2832zM8,44c0,0 -4,1 -4,9h22.04688c0.50064,2.83925 2.97,5 5.95313,5c2.98313,0 5.45249,-2.16075 5.95313,-5h22.04688c0,-8 -4,-9 -4,-9z"></path></g></g></svg>
+        <span id="notifications" class="nav-btns" onclick="showNotification()">
+            <svg class="nav-create-post-btn" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="64" height="64" viewBox="0 0 172 172" style=" fill:rgb(215, 218, 220); pointer-events: none;"><g fill="rgb(215, 218, 220)" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(2.6875,2.6875)"><path d="M30,4c-1.217,0 -2.15247,1.0782 -1.98047,2.2832l0.2832,1.98047c-8.449,0.981 -12.41016,5.33633 -12.41016,9.73633c0,14.747 -4.14488,22.63706 -4.79687,23.78906l41.09961,-1.41602c-1.388,-3.039 -4.08789,-10.47705 -4.08789,-22.37305c0,-4.401 -3.96116,-8.75533 -12.41016,-9.73633l0.2832,-1.98047c0.172,-1.205 -0.76347,-2.2832 -1.98047,-2.2832zM8,44c0,0 -4,1 -4,9h22.04688c0.50064,2.83925 2.97,5 5.95313,5c2.98313,0 5.45249,-2.16075 5.95313,-5h22.04688c0,-8 -4,-9 -4,-9z"></path></g></g></svg>
             {% show_notifications %}
         </span>
 

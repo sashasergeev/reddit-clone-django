@@ -48,6 +48,6 @@ def show_notifications(context):
     notifications = (
         Notifications.objects.filter(to_user=request_user)
         .exclude(user_has_seen=True)
-        .order_by("-date")
+        .order_by("-created_at")
     )
     return {"notifications": notifications}
