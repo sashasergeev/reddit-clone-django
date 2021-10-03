@@ -1,5 +1,7 @@
 # Reddit Clone - built with Django
 
+[Live DEMO](https://redditclonedjango.herokuapp.com)
+
 ## Interactions - What user can do
 
 ### ```Subreddits```
