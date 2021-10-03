@@ -22,7 +22,7 @@ window.onclick = function (e) {
 
 const clearNotifications = () => {
   let items = document.querySelectorAll(".notification-item");
-  fetch(`http://${window.location.host}/notifications/clear/`, {
+  fetch(`https://${window.location.host}/notifications/clear/`, {
     method: "POST",
     credentials: "same-origin",
     headers: {
