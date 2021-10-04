@@ -4,14 +4,16 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from mptt.models import MPTTModel, TreeForeignKey
+from django.core.files.storage import default_storage as storage
 from PIL import Image
 import math
+from io import BytesIO
 
 
 # FUNCTIONS AND MIXINS
 def upload_image_rename(instance, filename):
     print(filename)
-    filebase, extenstion = filename.split(".")
+    filebase, extenstion = filename.rsplit(".", 1)
     return "images/subreddit/%s.%s" % (instance.name, extenstion)
 
 
@@ -92,7 +94,7 @@ class Subreddit(models.Model):
     creation_data = models.DateField(auto_now_add=True)
     description = models.CharField(max_length=250)
     image = models.ImageField(
-        upload_to=upload_image_rename,
+        upload_to="images/subreddit/",
         default="images/subreddit/default.png",
         null=True,
         blank=True,
@@ -109,11 +111,17 @@ class Subreddit(models.Model):
 
     def save(self):
         super().save()  # saving image first
-        img = Image.open(self.image.path)  # Open image using self
+        memfile = BytesIO()
+        # img = Image.open(self.image.path)  # variant: local media storage
+        img = Image.open(self.image)  # s3 media storage
         if img.height > 250 or img.width > 250:
             new_img = (250, 250)
-            img.thumbnail(new_img)
-            img.save(self.image.path)  # saving image at the same path
+            img.thumbnail(new_img, Image.ANTIALIAS)
+            # img.save(self.image.path) # variant: local media storage
+            img.save(memfile, "png", quality=80)  # s3 media storage
+            storage.save(self.image.name, memfile)
+            memfile.close()
+            img.close()
 
 
 class Post(TimeStampMixin):
