@@ -25,7 +25,7 @@ class Profile(models.Model):
         return self.user.username
 
     def save(self, *args, **kwargs):
-        super(Profile, self).save(*args, **kwargs)  # saving image first
+        super(Profile, self).save(*args, **kwargs)
         memfile = BytesIO()
 
         if self.image:
@@ -38,9 +38,3 @@ class Profile(models.Model):
                 storage.save(self.image.name, memfile)
                 memfile.close()
                 img.close()
-            # LOCAL MEDIA STORAGE
-            # img = Image.open(self.image.path)  # Open image using self
-            # if img.height > 250 or img.width > 250:
-            #     new_img = (250, 250)
-            #     img.thumbnail(new_img)
-            #     img.save(self.image.path)  # saving image at the same path

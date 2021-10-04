@@ -110,15 +110,13 @@ class Subreddit(models.Model):
         return f"/r/{self.name}/"
 
     def save(self):
-        super().save()  # saving image first
+        super().save()
         memfile = BytesIO()
-        # img = Image.open(self.image.path)  # variant: local media storage
-        img = Image.open(self.image)  # s3 media storage
+        img = Image.open(self.image)
         if img.height > 250 or img.width > 250:
             new_img = (250, 250)
             img.thumbnail(new_img, Image.ANTIALIAS)
-            # img.save(self.image.path) # variant: local media storage
-            img.save(memfile, "png", quality=80)  # s3 media storage
+            img.save(memfile, "png", quality=80)
             storage.save(self.image.name, memfile)
             memfile.close()
             img.close()
