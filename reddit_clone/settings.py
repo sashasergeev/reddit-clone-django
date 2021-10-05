@@ -23,10 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "ww(n4z2v-r$pya*!w4sjbit6fh&q9s90v(gol(y%-i^x98s(6u"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = [".localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [".localhost", "127.0.0.1", "redditclonedjango.herokuapp.com"]
 
 
 # Application definition
@@ -153,3 +151,10 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_S3_HOST = "s3.eu-north-1.amazonaws.com"
 AWS_S3_REGION_NAME = "eu-north-1"
+
+
+# DEBUG SETTINGS
+if os.environ.get("DEBUG") == "True":
+    DEBUG = True
+elif os.environ.get("DEBUG") == "False":
+    DEBUG = False
