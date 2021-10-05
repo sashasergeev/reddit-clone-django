@@ -2,13 +2,7 @@ from django import template
 
 register = template.Library()
 
-from ..models import (
-    PostsUpVotes,
-    PostsDownVotes,
-    CommentUpVote,
-    CommentDownVote,
-    Notifications,
-)
+from ..models import Notifications
 
 
 # CHECK IF POST UPVOTED

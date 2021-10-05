@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load main_tags %}
+
+{% block title %}
+    Subreddits - Reddit Clone
+{% endblock title %}
+
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/subredditlist.css' %}">
+{% endblock statics %}
+
+
+{% block current_location %}
+    <span class="nav-location-svg">
+        <svg  viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M1.25 17.5v-10h5v10zm11.25 0h-5V5H5l5-5 5 5h-2.5zm1.25 0v-5h5v5z"></path></svg>
+    </span>
+    <h2 class="nav-currentLocation">
+        All
+    </h2>
+{% endblock current_location %}
+
+
+{% block content %}
+    <div id="list">
+        <div id="sub-list">
+            <h2 class="sub-list-header">All Communities</h2>
+            {% for sub in page_obj %}
+            <div style="position: relative;">
+                <a class="sub-item" href="{% url 'main:subreddit-detail' sub.name %}">
+                    <span>{{ forloop.counter }}</span>  <img class="sub-item-logo" src="{{ sub.image.url }}" alt="{{ sub.name }} logo">
+                    r/{{sub.name}}
+                </a>
+                {% if user.is_authenticated and sub|check_join:request.user  %}
+                <button class="joined-btn sjoin" data-sub-id="{{ sub.id }}">
+                    JOINED
+                </button>
+                {% else %}
+                <button class="join-btn sjoin" data-sub-id="{{ sub.id }}">
+                    JOIN
+                </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% include 'base/pagination-element.html' %}
+        </div>
+    </div>
+    <style>
+
+    </style>
+{% endblock content %}

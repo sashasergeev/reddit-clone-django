@@ -15,6 +15,7 @@ from .views import (
     subredditDetailPage,
     SubJoin,
     PostDetailPage,
+    SubredditListPage,
     PostUpvoteHandle,
     PostDownvoteHandle,
     CommentUpvoteHandle,
@@ -27,6 +28,7 @@ app_name = "main"
 urlpatterns = [
     # index - subreddit - post
     path("", IndexListView.as_view(), name="index"),
+    path("subreddits/", SubredditListPage, name="subreddit-list"),
     path("r/<slug:name>/", subredditDetailPage, name="subreddit-detail"),
     path("r/<slug:name>/<int:pk>/", PostDetailPage, name="post-detail"),
     # create post

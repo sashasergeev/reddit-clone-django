@@ -5,9 +5,9 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
+from django.db.models import Count
 
 from .forms import CommentForm
-from accounts.models import Profile
 from .models import (
     CommentDownVote,
     CommentUpVote,
@@ -31,8 +31,22 @@ class IndexListView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexListView, self).get_context_data(**kwargs)
-        context["sub_list"] = Subreddit.objects.order_by("name")[:5]
+        context["sub_list"] = Subreddit.objects.annotate(
+            num_members=Count("members")
+        ).order_by("-num_members")[:5]
         return context
+
+
+def SubredditListPage(request):
+    subs = Subreddit.objects.annotate(num_members=Count("members")).order_by(
+        "-num_members"
+    )
+
+    paginator = Paginator(subs, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "main/subredditlist.html", {"page_obj": page_obj})
 
 
 def subredditDetailPage(request, name):
@@ -68,10 +82,10 @@ def PostDetailPage(request, name, pk):
         "comment_upvote", "comment_downvote"
     )
     context = {"subreddit": subreddit, "post": post, "comments": comments, "form": form}
-
     return render(request, "main/post-detail.html", context)
 
 
+# NOTOFICATION VIEWS
 class PostCommentReplyNotification(View):
     def get(self, request, notification_pk, post_pk, *args, **kwargs):
         notification = Notifications.objects.get(pk=notification_pk)
