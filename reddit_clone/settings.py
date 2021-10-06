@@ -156,4 +156,5 @@ AWS_S3_REGION_NAME = "eu-north-1"
 
 
 # DEBUG SETTINGS
+# DEBUG = True
 DEBUG = os.environ.get("DEBUG") == "True"

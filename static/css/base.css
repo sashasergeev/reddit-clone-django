@@ -17,7 +17,6 @@ nav {
     -webkit-box-align: center;
     align-items: center;
     padding: 0px 20px;
-    overflow:hidden;
     position: sticky;
     top: 0px;
     position: sticky;
@@ -63,6 +62,36 @@ nav svg {
     margin: 0px 16px;
     width: 100%;
     position: relative;
+}
+#searchContainer {
+    position: absolute;
+    top: 44px;
+    background: #1a1a1b;
+    width: inherit;
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #343536;
+    border-top: 0 solid;
+    color: #d7dadc;
+    padding-bottom: 16px;
+    box-shadow: 0 2px 4px 0 #d7dadc33;
+}
+.search-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px 6px;
+    font-size: 15px;
+}
+.search-item:hover {
+    background: #272729;
+}
+.search-item-logo {
+    height: 18px;
+    width: 18px;
+    margin-right: 5px;
+}
+.search-item-membs {
+    color: #818384;
+    font-size: 12px;
 }
 .nav-searchbar:hover, .nav-searchbar:focus {
     border-color: rgb(215, 218, 220);
@@ -384,9 +413,9 @@ nav svg {
     .loc-padd {
         padding-left: 10px;
     }
-    .nav-create-post-btn {
-        display: none;
-    }
+    #create-post-nav-btn,
+    #notifications,
+    .nav-create-post-btn,
     .notification-badge {
         display: none;
     }

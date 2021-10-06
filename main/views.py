@@ -1,3 +1,4 @@
+import json
 from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic, View
@@ -398,17 +399,25 @@ def DeleteComment(request, pk):
 
 # search subreddits - JavaScript
 def SearchSubreddit(request):
-    if request.is_ajax():
-        res = None
-        sub = request.POST.get("coin")
-        qs = Subreddit.objects.filter(name__icontains=sub)
-        if len(qs) > 0 and len(sub) > 0:
+    res = "No subreddits found..."
+
+    data = json.load(request)
+    query = data.get("query")
+    if len(query) > 0:
+        qs = (
+            Subreddit.objects.filter(name__icontains=query)
+            .annotate(num_members=Count("members"))
+            .order_by("-num_members")
+        )
+        if len(qs) > 0:
             data = []
             for pos in qs:
-                item = {"pk": pos.pk, "name": pos.name, "img": pos.image}
+                item = {
+                    "pk": pos.pk,
+                    "name": pos.name,
+                    "img": pos.image.url,
+                    "num_members": pos.num_members,
+                }
                 data.append(item)
             res = data
-        else:
-            res = "no subreddits found..."
-        return JsonResponse({"data": res})
-    return JsonResponse({})
+    return JsonResponse({"data": res})

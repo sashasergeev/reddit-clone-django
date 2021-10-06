@@ -11,11 +11,17 @@ const showNotification = () => {
   }
 };
 
+// SEARCH AND NOTIFICATION DROPDOWNS ONBLUR
 window.onclick = function (e) {
-  if (!e.target.matches("#notifications")) {
-    if (container.style.display === "block") {
+  if (container.style.display === "block") {
+    if (!e.target.matches("#notifications")) {
       container.style.display = "none";
       btn.style.background = "none";
+    }
+  }
+  if (searchInput.style.display === "block") {
+    if (!e.target.matches(".search")) {
+      searchInput.style.display = "none";
     }
   }
 };

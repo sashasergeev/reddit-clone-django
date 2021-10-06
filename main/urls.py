@@ -44,7 +44,7 @@ urlpatterns = [
     path("comment-vote/<int:pk>/", CommentUpvoteHandle, name="upvote-comment"),
     path("comment-downvote/<int:pk>/", CommentDownvoteHandle, name="downvote-comment"),
     # SEARCH SUBREDDITS - used with fetch API
-    path("subredditt/search/", SearchSubreddit, name="Search"),
+    path("subreddits/search/", SearchSubreddit, name="Search"),
     # JOIN / LEAVE SUBREDDIT - used with fetch API
     path("join/<int:pk>/", SubJoin, name="sub-join"),
     # delete post
