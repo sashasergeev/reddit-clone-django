@@ -394,3 +394,21 @@ def DeleteComment(request, pk):
     if request.method == "POST":
         comment.delete()
     return JsonResponse({"action": "deleted"})
+
+
+# search subreddits - JavaScript
+def SearchSubreddit(request):
+    if request.is_ajax():
+        res = None
+        sub = request.POST.get("coin")
+        qs = Subreddit.objects.filter(name__icontains=sub)
+        if len(qs) > 0 and len(sub) > 0:
+            data = []
+            for pos in qs:
+                item = {"pk": pos.pk, "name": pos.name, "img": pos.image}
+                data.append(item)
+            res = data
+        else:
+            res = "no subreddits found..."
+        return JsonResponse({"data": res})
+    return JsonResponse({})

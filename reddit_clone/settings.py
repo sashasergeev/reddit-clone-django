@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "ww(n4z2v-r$pya*!w4sjbit6fh&q9s90v(gol(y%-i^x98s(6u"
 
 
-ALLOWED_HOSTS = [".localhost", "127.0.0.1", "redditclonedjango.herokuapp.com"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -43,11 +43,13 @@ INSTALLED_APPS = [
     # 3rd party apps
     "mptt",
     "storages",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -154,7 +156,4 @@ AWS_S3_REGION_NAME = "eu-north-1"
 
 
 # DEBUG SETTINGS
-if os.environ.get("DEBUG") == "True":
-    DEBUG = True
-elif os.environ.get("DEBUG") == "False":
-    DEBUG = False
+DEBUG = os.environ.get("DEBUG") == "True"
