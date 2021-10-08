@@ -5,7 +5,7 @@ const commentDeleteButtons = document.querySelectorAll(".btn-delete");
 commentDeleteButtons.forEach((e) => {
   e.addEventListener("click", (b) => {
     let commentId = b.target.dataset.commentId;
-    fetch(`https://${window.location.host}/comment/${commentId}/`, {
+    fetch(`${window.location.origin}/comment/${commentId}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -26,7 +26,7 @@ commentUpvoteButtons.forEach((e) => {
   e.addEventListener("click", (b) => {
     let commentId = e.dataset.commentId;
 
-    fetch(`https://${window.location.host}/comment-vote/${commentId}/`, {
+    fetch(`${window.location.origin}/comment-vote/${commentId}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -64,7 +64,7 @@ commentDownvoteButtons.forEach((e) => {
   e.addEventListener("click", (b) => {
     let commentId = e.dataset.commentId;
 
-    fetch(`https://${window.location.host}/comment-downvote/${commentId}/`, {
+    fetch(`${window.location.origin}/comment-downvote/${commentId}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {

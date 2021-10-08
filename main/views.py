@@ -127,7 +127,7 @@ def PostUpvoteHandle(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return redirect("accounts:login")
+        return JsonResponse({"error": "unauth"})
 
     # checks if upvote exists, if so, deletes it
     upvote = PostsUpVotes.objects.filter(post=post, user=user)
@@ -143,8 +143,8 @@ def PostUpvoteHandle(request, pk):
         response["downvote_existed"] = True
 
     # creates upvote
-    if request.method == "POST":
-        PostsUpVotes.objects.create(post=post, user=user)
+    # if request.method == "POST":
+    PostsUpVotes.objects.create(post=post, user=user)
     return JsonResponse(response)
 
 
@@ -156,7 +156,7 @@ def PostDownvoteHandle(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return redirect("accounts:login")
+        return JsonResponse({"error": "unauth"})
 
     # checks if downvote exists, if so, deletes it
     downvote = PostsDownVotes.objects.filter(post=post, user=user)
@@ -172,8 +172,8 @@ def PostDownvoteHandle(request, pk):
         response["upvote_existed"] = True
 
     # creates downvote
-    if request.method == "POST":
-        PostsDownVotes.objects.create(post=post, user=user)
+    # if request.method == "POST":
+    PostsDownVotes.objects.create(post=post, user=user)
     return JsonResponse(response)
 
 
@@ -185,7 +185,7 @@ def CommentUpvoteHandle(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return redirect("accounts:login")
+        return JsonResponse({"error": "unauth"})
 
     # checks if upvote on an object exists, if exists deletes it
     upvote = CommentUpVote.objects.filter(comment=comment, user=user)
@@ -201,8 +201,8 @@ def CommentUpvoteHandle(request, pk):
         response["downvote_existed"] = True
 
     # creates upvote
-    if request.method == "POST":
-        CommentUpVote.objects.create(comment=comment, user=user)
+    # if request.method == "POST":
+    CommentUpVote.objects.create(comment=comment, user=user)
     return JsonResponse(response)
 
 
@@ -214,7 +214,7 @@ def CommentDownvoteHandle(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return redirect("accounts:login")
+        return JsonResponse({"error": "unauth"})
 
     # checks if downvote exists, if so, deletes it
     downvote = CommentDownVote.objects.filter(comment=comment, user=user)
@@ -230,8 +230,8 @@ def CommentDownvoteHandle(request, pk):
         response["upvote_existed"] = True
 
     # creates downvote
-    if request.method == "POST":
-        CommentDownVote.objects.create(comment=comment, user=user)
+    # if request.method == "POST":
+    CommentDownVote.objects.create(comment=comment, user=user)
     return JsonResponse(response)
 
 
@@ -244,7 +244,7 @@ def SubJoin(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return redirect("accounts:login")
+        return JsonResponse({"error": "unauth"})
 
     # checks if sub joined, if so, deletes it
     is_joined = user.sub_members.filter(name=sub.name)
@@ -385,7 +385,7 @@ def DeleteComment(request, pk):
 
     # auth check
     if not user.is_authenticated:
-        return JsonResponse({"action": "auth"})
+        return JsonResponse({"error": "unauth"})
 
     # check if this comment is done by the same user
     if not comment.commentator == user:

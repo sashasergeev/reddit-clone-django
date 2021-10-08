@@ -4,7 +4,7 @@ joinBtns.forEach((e) => {
   e.addEventListener("click", (b) => {
     let sub_id = b.target.dataset.subId;
 
-    fetch(`https://${window.location.host}/join/${sub_id}/`, {
+    fetch(`${window.location.origin}/join/${sub_id}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {

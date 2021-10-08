@@ -191,12 +191,31 @@
        {% endif %}
     </nav>
 
-
     {% block content %}{% endblock content %}
-    <script src="{% static 'js/voting.js' %}"></script>
-    <script src="{% static 'js/search.js' %}"></script>
-    <script src="{% static 'js/join.js' %}"></script>
-    <script src="{% static 'js/notification.js' %}"></script>
     
+    {% if user.is_authenticated %}
+        <script src="{% static 'js/voting.js' %}"></script>
+        <script src="{% static 'js/join.js' %}"></script>
+        <script src="{% static 'js/notification.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/search.js' %}"></script>
+    <script>
+        window.onclick = function (e) {
+            {% if user.is_authenticated %}
+            if (container.style.display === "block") {
+                if (!e.target.matches("#notifications")) {
+                container.style.display = "none";
+                btn.style.background = "none";
+                };
+            };
+            {% endif %}
+            if (style.display === "block") {
+                if (!e.target.matches(".search")) {
+                style.display = "none";
+                };
+            };
+        };
+
+    </script>
 </body>
 </html>

@@ -6,7 +6,7 @@ postUpvoteButtons.forEach((e) => {
     let button = e;
     let post_id = e.dataset.postId;
     let votes_element = document.querySelector(`#votes-on-${post_id}`);
-    fetch(`https://${window.location.host}/vote/${post_id}/`, {
+    fetch(`${window.location.origin}/vote/${post_id}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -25,7 +25,6 @@ postUpvoteButtons.forEach((e) => {
           if (data.downvote_existed === false) {
             votes_element.innerHTML = parseInt(votes_element.innerHTML) + 1;
           } else {
-            console.log("hi");
             document.querySelector(`#downvote-${post_id}`).style.color =
               "rgb(129, 131, 132)";
             votes_element.innerHTML = parseInt(votes_element.innerHTML) + 2;
@@ -44,7 +43,7 @@ postDownvoteButtons.forEach((e) => {
     let post_id = e.dataset.postId;
     let votes_element = document.querySelector(`#votes-on-${post_id}`);
 
-    fetch(`https://${window.location.host}/downvote/${post_id}/`, {
+    fetch(`${window.location.origin}/downvote/${post_id}/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {

@@ -26,7 +26,6 @@ SECRET_KEY = "ww(n4z2v-r$pya*!w4sjbit6fh&q9s90v(gol(y%-i^x98s(6u"
 
 ALLOWED_HOSTS = ["*"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -43,13 +42,11 @@ INSTALLED_APPS = [
     # 3rd party apps
     "mptt",
     "storages",
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -140,7 +137,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 import django_heroku
 
 django_heroku.settings(locals())
-
 
 # S3 BUCKETS CONFIG
 

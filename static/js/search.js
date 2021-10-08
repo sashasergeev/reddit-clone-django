@@ -3,7 +3,7 @@ const searchInput = document.querySelector("#search");
 let style = searchContainer.style;
 
 // SEARCH AND NOTIFICATION DROPDOWNS ONBLUR
-// IS LOCATED IN 'notifications.js'
+// IS LOCATED IN 'base.html'
 
 searchInput.addEventListener("keyup", (e) => {
   const value = e.target.value;
@@ -18,17 +18,14 @@ searchInput.addEventListener("keyup", (e) => {
 });
 
 const fetchSearchResults = async (value) => {
-  const request = await fetch(
-    `https://${window.location.host}/subreddits/search/`,
-    {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "X-CSRFToken": token,
-      },
-      body: JSON.stringify({ query: value }),
-    }
-  );
+  const request = await fetch(`${window.location.origin}/subreddits/search/`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRFToken": token,
+    },
+    body: JSON.stringify({ query: value }),
+  });
   const data = await request.json();
   renderResults(data);
 };

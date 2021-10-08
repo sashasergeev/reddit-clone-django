@@ -12,23 +12,11 @@ const showNotification = () => {
 };
 
 // SEARCH AND NOTIFICATION DROPDOWNS ONBLUR
-window.onclick = function (e) {
-  if (container.style.display === "block") {
-    if (!e.target.matches("#notifications")) {
-      container.style.display = "none";
-      btn.style.background = "none";
-    }
-  }
-  if (searchInput.style.display === "block") {
-    if (!e.target.matches(".search")) {
-      searchInput.style.display = "none";
-    }
-  }
-};
+// IS LOCATED IN 'base.html'
 
 const clearNotifications = () => {
   let items = document.querySelectorAll(".notification-item");
-  fetch(`https://${window.location.host}/notifications/clear/`, {
+  fetch(`${window.location.origin}/notifications/clear/`, {
     method: "POST",
     credentials: "same-origin",
     headers: {
