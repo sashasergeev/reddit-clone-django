@@ -1,5 +1,3 @@
-import json
-from django.http.response import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic, View
 from django.core.paginator import Paginator
@@ -10,12 +8,8 @@ from django.db.models import Count
 
 from .forms import CommentForm
 from .models import (
-    CommentDownVote,
-    CommentUpVote,
     Subreddit,
     Post,
-    PostsUpVotes,
-    PostsDownVotes,
     Comment,
     Notifications,
 )
@@ -107,155 +101,6 @@ class CommentNotifications(View):
         return redirect(
             reverse("main:post-detail", args=(comment.post.sub.name, comment.post.pk))
         )
-
-
-class ClearNotifications(View):
-    def post(self, request, *args, **kwargs):
-        notifications = Notifications.objects.filter(to_user=request.user)
-        for n in notifications:
-            n.user_has_seen = True
-            n.save()
-        return JsonResponse({"Status": "Removed"})
-
-
-# POST VOTES - JavaScript
-def PostUpvoteHandle(request, pk):
-    # obtaining needed data
-    post = Post.objects.get(pk=pk)
-    user = request.user
-    response = {"action": "post upvoted", "downvote_existed": False}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # checks if upvote exists, if so, deletes it
-    upvote = PostsUpVotes.objects.filter(post=post, user=user)
-    if upvote.exists():
-        upvote.delete()
-        response["action"] = "post upvote unvoted"
-        return JsonResponse(response)
-
-    # checks if downvote on an object exists, if exists deletes it
-    downvote = PostsDownVotes.objects.filter(post=post, user=user)
-    if downvote.exists():
-        downvote.delete()
-        response["downvote_existed"] = True
-
-    # creates upvote
-    # if request.method == "POST":
-    PostsUpVotes.objects.create(post=post, user=user)
-    return JsonResponse(response)
-
-
-def PostDownvoteHandle(request, pk):
-    # obtaining needed data
-    post = Post.objects.get(pk=pk)
-    user = request.user
-    response = {"action": "post downvoted", "upvote_existed": False}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # checks if downvote exists, if so, deletes it
-    downvote = PostsDownVotes.objects.filter(post=post, user=user)
-    if downvote.exists():
-        downvote.delete()
-        response["action"] = "post downvote unvoted"
-        return JsonResponse(response)
-
-    # checks if upvote on an object exists, if exists deletes it
-    upvote = PostsUpVotes.objects.filter(post=post, user=user)
-    if upvote.exists():
-        upvote.delete()
-        response["upvote_existed"] = True
-
-    # creates downvote
-    # if request.method == "POST":
-    PostsDownVotes.objects.create(post=post, user=user)
-    return JsonResponse(response)
-
-
-def CommentUpvoteHandle(request, pk):
-    # obtaining needed data
-    comment = Comment.objects.get(pk=pk)
-    user = request.user
-    response = {"action": "comment upvoted", "downvote_existed": False}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # checks if upvote on an object exists, if exists deletes it
-    upvote = CommentUpVote.objects.filter(comment=comment, user=user)
-    if upvote.exists():
-        upvote.delete()
-        response["action"] = "comment upvote unvoted"
-        return JsonResponse(response)
-
-    # checks if downvote exists, if so, deletes it
-    downvote = CommentDownVote.objects.filter(comment=comment, user=user)
-    if downvote.exists():
-        downvote.delete()
-        response["downvote_existed"] = True
-
-    # creates upvote
-    # if request.method == "POST":
-    CommentUpVote.objects.create(comment=comment, user=user)
-    return JsonResponse(response)
-
-
-def CommentDownvoteHandle(request, pk):
-    # obtaining needed data
-    comment = Comment.objects.get(pk=pk)
-    user = request.user
-    response = {"action": "comment downvoted", "upvote_existed": False}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # checks if downvote exists, if so, deletes it
-    downvote = CommentDownVote.objects.filter(comment=comment, user=user)
-    if downvote.exists():
-        downvote.delete()
-        response["action"] = "comment downvote unvoted"
-        return JsonResponse(response)
-
-    # checks if upvote on an object exists, if exists deletes it
-    upvote = CommentUpVote.objects.filter(comment=comment, user=user)
-    if upvote.exists():
-        upvote.delete()
-        response["upvote_existed"] = True
-
-    # creates downvote
-    # if request.method == "POST":
-    CommentDownVote.objects.create(comment=comment, user=user)
-    return JsonResponse(response)
-
-
-# JOIN / LEAVE SUBREDDIT - JavaScript
-def SubJoin(request, pk):
-    # obtaining needed data
-    sub = Subreddit.objects.get(pk=pk)
-    user = request.user
-    response = {"action": "joined"}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # checks if sub joined, if so, deletes it
-    is_joined = user.sub_members.filter(name=sub.name)
-    if is_joined.exists():
-        sub.members.remove(user)
-        response["action"] = "left"
-        return JsonResponse(response)
-
-    # joins subreddit
-    user.sub_members.add(sub)
-    return JsonResponse(response)
 
 
 # CREATE POST
@@ -365,59 +210,3 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         form = super(CreateSubreddit, self).get_form(form_class)
         form.fields["image"].required = False
         return form
-
-
-# delete comment - JavaScript
-def DeletePost(request, name, pk):
-    user = request.user
-    post = Post.objects.get(pk=pk)
-
-    if post.creator.username == user.username:
-        post.delete()
-    return redirect(reverse("main:subreddit-detail", args=[name]))
-
-
-# delete comment - JavaScript
-def DeleteComment(request, pk):
-    # obtaining needed data
-    comment = Comment.objects.get(pk=pk)
-    user = request.user
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
-
-    # check if this comment is done by the same user
-    if not comment.commentator == user:
-        return JsonResponse({"action": "user error"})
-
-    # deleting comment
-    if request.method == "POST":
-        comment.delete()
-    return JsonResponse({"action": "deleted"})
-
-
-# search subreddits - JavaScript
-def SearchSubreddit(request):
-    res = "No subreddits found..."
-
-    data = json.load(request)
-    query = data.get("query")
-    if len(query) > 0:
-        qs = (
-            Subreddit.objects.filter(name__icontains=query)
-            .annotate(num_members=Count("members"))
-            .order_by("-num_members")
-        )
-        if len(qs) > 0:
-            data = []
-            for pos in qs:
-                item = {
-                    "pk": pos.pk,
-                    "name": pos.name,
-                    "img": pos.image.url,
-                    "num_members": pos.num_members,
-                }
-                data.append(item)
-            res = data
-    return JsonResponse({"data": res})

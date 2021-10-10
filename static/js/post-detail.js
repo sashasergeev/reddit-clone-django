@@ -26,7 +26,7 @@ commentUpvoteButtons.forEach((e) => {
   e.addEventListener("click", (b) => {
     let commentId = e.dataset.commentId;
 
-    fetch(`${window.location.origin}/comment-vote/${commentId}/`, {
+    fetch(`${window.location.origin}/comment/vote/${commentId}/upvote/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -64,7 +64,7 @@ commentDownvoteButtons.forEach((e) => {
   e.addEventListener("click", (b) => {
     let commentId = e.dataset.commentId;
 
-    fetch(`${window.location.origin}/comment-downvote/${commentId}/`, {
+    fetch(`${window.location.origin}/comment/vote/${commentId}/downvote/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {

@@ -6,7 +6,7 @@ postUpvoteButtons.forEach((e) => {
     let button = e;
     let post_id = e.dataset.postId;
     let votes_element = document.querySelector(`#votes-on-${post_id}`);
-    fetch(`${window.location.origin}/vote/${post_id}/`, {
+    fetch(`${window.location.origin}/post/vote/${post_id}/upvote/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -43,7 +43,7 @@ postDownvoteButtons.forEach((e) => {
     let post_id = e.dataset.postId;
     let votes_element = document.querySelector(`#votes-on-${post_id}`);
 
-    fetch(`${window.location.origin}/downvote/${post_id}/`, {
+    fetch(`${window.location.origin}/post/vote/${post_id}/downvote/`, {
       method: "POST",
       credentials: "same-origin",
       headers: {

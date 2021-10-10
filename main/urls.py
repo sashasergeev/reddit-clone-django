@@ -11,18 +11,19 @@ from .views import (
     CreateSubreddit,
     PostCommentReplyNotification,
     CommentNotifications,
-    ClearNotifications,
     subredditDetailPage,
-    SubJoin,
-    SearchSubreddit,
     PostDetailPage,
     SubredditListPage,
-    PostUpvoteHandle,
-    PostDownvoteHandle,
-    CommentUpvoteHandle,
-    CommentDownvoteHandle,
-    DeletePost,
+)
+
+from .ajax_views import (
+    PostVoteHandle,
+    CommentVoteHandle,
+    ClearNotifications,
+    SubJoin,
+    SearchSubreddit,
     DeleteComment,
+    DeletePost,
 )
 
 app_name = "main"
@@ -38,11 +39,11 @@ urlpatterns = [
     # create community
     path("subreddits/create", CreateSubreddit.as_view(), name="create-subreddit"),
     # POST upvote / downvote - used with fetch API
-    path("vote/<int:pk>/", PostUpvoteHandle, name="upvote-post"),
-    path("downvote/<int:pk>/", PostDownvoteHandle, name="downvote-post"),
+    path("post/vote/<int:pk>/<slug:voteType>/", PostVoteHandle, name="post-vote"),
     # COMMENT upvote / downvote - used with fetch API
-    path("comment-vote/<int:pk>/", CommentUpvoteHandle, name="upvote-comment"),
-    path("comment-downvote/<int:pk>/", CommentDownvoteHandle, name="downvote-comment"),
+    path(
+        "comment/vote/<int:pk>/<slug:voteType>/", CommentVoteHandle, name="comment-vote"
+    ),
     # SEARCH SUBREDDITS - used with fetch API
     path("subreddits/search/", SearchSubreddit, name="Search"),
     # JOIN / LEAVE SUBREDDIT - used with fetch API
