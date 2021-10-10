@@ -40,7 +40,7 @@ const renderResults = (res) => {
     (e) =>
       (searchContainer.innerHTML += `
       
-      <a class="search-item" href="https://${window.location.host}/r/${e.name}/">
+      <a class="search-item" href="${window.location.origin}/r/${e.name}/">
         <img class="search-item-logo" src=${e.img} alt="${e.name} logo" />
         <div class="search-item-info">
         <div>${e.name}</div>  

@@ -29,9 +29,10 @@
         {% for message in messages %}
             {% include 'base/message-succ-saved.html' %}
         {% endfor %}
+            <div class="infinite-container">
             {% for item in feed %}
                 {% if item.commentator %}
-                <div class="comment">
+                <div class="comment infinite-item">
                     <div class="comment-header">
                         <div class="comment-header-icon">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="title"
@@ -67,7 +68,7 @@
                     </div>
                 </div>
                 {% else %}
-                    <div class="post comment">
+                    <div class="post comment infinite-item">
                         <div class="vote-part">
                             <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
                                 <div class="post-upvote-btn">
@@ -121,23 +122,13 @@
                     </div>
                 {% endif %}
             {% empty %}
-            <h1>He didn't post anything yet</h1>
+            <h1>User has no activity.</h1>
             {% endfor %}
-            <div class="pagination">
-                <span class="page-links">
-                    {% if feed.has_previous %}
-                        <a href="?page=1"><button class="nav-btn page">First</button></a>
-                        <a href="{{ request.path }}?page={{ feed.previous_page_number }}"><button class="nav-btn page">Previous</button></a>
-                    {% endif %}
-                    <span class="page-current nav-btn page">
-                        {{ feed.number }} of {{ feed.paginator.num_pages }}
-                    </span>
-                    {% if feed.has_next %}
-                        <a href="{{ request.path }}?page={{ feed.next_page_number }}"><button class="nav-btn page">Next</button></a>
-                        <a href="?page={{ feed.paginator.num_pages }}"><button class="nav-btn page">Last</button></a>
-                    {% endif %}
-                </span>
             </div>
+
+            {% if feed.has_next %}
+                <a href="?page={{ feed.next_page_number }}" class="infinite-more-link">Show more</a>
+            {% endif %}
         </div>
         <aside class="sidebar">
             <div class="sidebar-box">
@@ -183,5 +174,6 @@
                 {% endif %}
             </div>
         </aside>
+    {% include "base/pag-inf-scripts.html" %}
     </section>
 {% endblock content %}

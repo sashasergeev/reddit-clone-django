@@ -23,29 +23,33 @@
 
 {% block content %}
     <div id="list">
-        <div id="sub-list">
+        <div id="sub-list"> 
             <h2 class="sub-list-header">All Communities</h2>
-            {% for sub in page_obj %}
-            <div style="position: relative;">
-                <a class="sub-item" href="{% url 'main:subreddit-detail' sub.name %}">
-                    <span>{{ forloop.counter }}</span>  <img class="sub-item-logo" src="{{ sub.image.url }}" alt="{{ sub.name }} logo">
-                    r/{{sub.name}}
-                </a>
-                {% if user.is_authenticated and sub|check_join:request.user  %}
-                <button class="joined-btn sjoin" data-sub-id="{{ sub.id }}">
-                    JOINED
-                </button>
-                {% else %}
-                <button class="join-btn sjoin" data-sub-id="{{ sub.id }}">
-                    JOIN
-                </button>
-                {% endif %}
+            <div class="infinite-container">
+                {% for sub in page_obj %}
+                    <div class="infinite-item" style="position: relative;">
+                        <a class="sub-item" href="{% url 'main:subreddit-detail' sub.name %}">
+                            <span>{{ forloop.counter }}</span>  <img class="sub-item-logo" src="{{ sub.image.url }}" alt="{{ sub.name }} logo">
+                            r/{{sub.name}}
+                        </a>
+                        {% if user.is_authenticated and sub|check_join:request.user  %}
+                        <button class="joined-btn sjoin" data-sub-id="{{ sub.id }}">
+                            JOINED
+                        </button>
+                        {% else %}
+                        <button class="join-btn sjoin" data-sub-id="{{ sub.id }}">
+                            JOIN
+                        </button>
+                        {% endif %}
+                    </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-            {% include 'base/pagination-element.html' %}
-        </div>
-    </div>
-    <style>
 
-    </style>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
+            {% endif %}
+        </div>
+    {% include "base/pag-inf-scripts.html" %}
+
+    </div>
 {% endblock content %}

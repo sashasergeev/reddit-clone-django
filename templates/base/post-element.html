@@ -1,6 +1,6 @@
 {% load main_tags %}
 
-<div class="post">
+<div class="post infinite-item">
     <div class="vote-part">
         <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
             <div class="post-upvote-btn">
@@ -22,7 +22,9 @@
                     <a href="{% url 'main:subreddit-detail' item.sub.name %}">r/{{item.sub.name}}</a>
                 </span>
             {% endif %}
-            Posted by
+            <span>
+                Posted by&nbsp;
+            </span> 
             <a class="top-line-username" style="color: rgb(129, 131, 132);" href="{% url 'accounts:profile-overview' item.creator.username %}">
                 u/{{item.creator.username}}
             </a>

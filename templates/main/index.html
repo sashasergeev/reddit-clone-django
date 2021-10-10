@@ -6,7 +6,9 @@
 Reddit CLone - Dive into something
 {% endblock title %}
 
-{% block statics %}<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">{% endblock statics %}
+{% block statics %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock statics %}
 
 
 {% block content %}
@@ -24,12 +26,14 @@ Reddit CLone - Dive into something
                 <input readonly type="text" placeholder="Create Post" class="create-post-input">
             </div>
             {% comment %} POSTS {% endcomment %}
-            {% for item in posts %}
-                {% include 'base/post-element.html' %}
-            {% endfor %}
-            {% comment %} PAGINATION {% endcomment %}
-            {% if is_paginated %}
-                {% include 'base/pagination-element.html' %}
+            <div class="infinite-container">
+                {% for item in posts %}
+                    {% include 'base/post-element.html' %}
+                {% endfor %}
+            </div>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
             {% endif %}
         </div>
 
@@ -61,6 +65,8 @@ Reddit CLone - Dive into something
                 {% endfor %}
             </div>
         </aside>
+
+    {% include "base/pag-inf-scripts.html" %}
     </main>
 
 {% endblock content %}

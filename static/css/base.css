@@ -385,6 +385,19 @@ nav svg {
         display: flex;
     }
 }
+
+.infinite-more-link {
+    background: #ffffff33;
+    display: block;
+    width: fit-content;
+    text-align: center;
+    padding: 10px;
+    margin: 0 auto;
+    border-radius: 5px;
+    color: #d2d5d7;
+    border: 1px solid #737373;
+}
+
 @media screen and (max-width: 1024px) {
     .nav-karma {
         display: none;
