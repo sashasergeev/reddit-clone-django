@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.db.models import Count
+from django.contrib.auth.models import User
 
 from .forms import CommentForm
 from .models import (
@@ -210,3 +211,74 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         form = super(CreateSubreddit, self).get_form(form_class)
         form.fields["image"].required = False
         return form
+
+
+# FULL SEARCH
+def Search(request):
+    query = request.GET.get("q")
+    current = request.GET.get("subpage")
+
+    if current is None:
+        subs = (
+            Subreddit.objects.filter(name__icontains=query)
+            .annotate(num_members=Count("members"))
+            .order_by("-num_members")[:3]
+        )
+        users = User.objects.filter(username__icontains=query)[:3]
+        posts = Post.objects.filter(title__icontains=query)
+        paginator = Paginator(posts, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "subs": subs,
+            "users": users,
+            "page_obj": page_obj,
+            "searchQ": query,
+            "current": None,
+        }
+    elif current == "posts":
+        posts = Post.objects.filter(title__icontains=query)
+        paginator = Paginator(posts, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "page_obj": page_obj,
+            "searchQ": query,
+            "current": current,
+        }
+    elif current == "subs":
+        subs = (
+            Subreddit.objects.filter(name__icontains=query)
+            .annotate(num_members=Count("members"))
+            .order_by("-num_members")
+        )
+        paginator = Paginator(subs, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "subs": page_obj,
+            "searchQ": query,
+            "current": current,
+        }
+    elif current == "users":
+        users = User.objects.filter(username__icontains=query)
+        paginator = Paginator(users, 10)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        context = {
+            "users": page_obj,
+            "searchQ": query,
+            "current": current,
+        }
+
+    return render(request, "main/search.html", context)
+
+
+# delete comment
+def DeletePost(request, name, pk):
+    user = request.user
+    post = Post.objects.get(pk=pk)
+
+    if post.creator.username == user.username:
+        post.delete()
+    return redirect(reverse("main:subreddit-detail", args=[name]))

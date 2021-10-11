@@ -119,16 +119,6 @@ def SubJoin(request, pk):
 
 
 # delete comment - JavaScript
-def DeletePost(request, name, pk):
-    user = request.user
-    post = Post.objects.get(pk=pk)
-
-    if post.creator.username == user.username:
-        post.delete()
-    return redirect(reverse("main:subreddit-detail", args=[name]))
-
-
-# delete comment - JavaScript
 def DeleteComment(request, pk):
     # obtaining needed data
     comment = Comment.objects.get(pk=pk)
@@ -148,7 +138,7 @@ def DeleteComment(request, pk):
     return JsonResponse({"action": "deleted"})
 
 
-# search subreddits - JavaScript
+# live search subreddits - JavaScript
 def SearchSubreddit(request):
     res = "No subreddits found..."
 
@@ -159,7 +149,7 @@ def SearchSubreddit(request):
             Subreddit.objects.filter(name__icontains=query)
             .annotate(num_members=Count("members"))
             .order_by("-num_members")
-        )
+        )[:5]
         if len(qs) > 0:
             data = []
             for pos in qs:

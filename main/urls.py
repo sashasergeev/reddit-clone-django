@@ -14,6 +14,8 @@ from .views import (
     subredditDetailPage,
     PostDetailPage,
     SubredditListPage,
+    Search,
+    DeletePost,
 )
 
 from .ajax_views import (
@@ -23,7 +25,6 @@ from .ajax_views import (
     SubJoin,
     SearchSubreddit,
     DeleteComment,
-    DeletePost,
 )
 
 app_name = "main"
@@ -38,20 +39,6 @@ urlpatterns = [
     path("r/<slug:name>/create-post/", CreatePostIn.as_view(), name="create-post-in"),
     # create community
     path("subreddits/create", CreateSubreddit.as_view(), name="create-subreddit"),
-    # POST upvote / downvote - used with fetch API
-    path("post/vote/<int:pk>/<slug:voteType>/", PostVoteHandle, name="post-vote"),
-    # COMMENT upvote / downvote - used with fetch API
-    path(
-        "comment/vote/<int:pk>/<slug:voteType>/", CommentVoteHandle, name="comment-vote"
-    ),
-    # SEARCH SUBREDDITS - used with fetch API
-    path("subreddits/search/", SearchSubreddit, name="Search"),
-    # JOIN / LEAVE SUBREDDIT - used with fetch API
-    path("join/<int:pk>/", SubJoin, name="sub-join"),
-    # delete post
-    path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-sub"),
-    # delete comment -- used with fetch API
-    path("comment/<int:pk>/", DeleteComment, name="delete-comment"),
     # Post Notifications - votes - comments
     path(
         "notifications/<int:notification_pk>/post/<int:post_pk>/",
@@ -63,6 +50,21 @@ urlpatterns = [
         CommentNotifications.as_view(),
         name="comment-notification",
     ),
+    # SEARCH
+    path("search/", Search, name="Search"),
+    # DELETE POST
+    path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-post"),
+    ## AJAX URLS
+    # POST - COMMENT upvote / downvote - used with fetch API
+    path("post/vote/<int:pk>/<slug:voteType>/", PostVoteHandle),
+    path("comment/vote/<int:pk>/<slug:voteType>/", CommentVoteHandle),
+    # LIVE SEARCH SUBREDDITS - used with fetch API
+    path("subreddits/live-search/", SearchSubreddit),
+    # JOIN / LEAVE SUBREDDIT - used with fetch API
+    path("join/<int:pk>/", SubJoin),
+    # delete comment -- used with fetch API
+    path("comment/<int:pk>/", DeleteComment),
+    # clear notifications
     path("notifications/clear/", ClearNotifications.as_view()),
 ]
 

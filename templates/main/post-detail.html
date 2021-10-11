@@ -87,7 +87,7 @@
                                 </span>
                             </div>
                                 {% if request.user.username == post.creator.username %}
-                                <button onclick="window.location.href='{% url 'main:delete-sub' subreddit.name post.id %}';" class="btn-reply" data-post-id="{{ node.id }}" >
+                                <button onclick="window.location.href='{% url 'main:delete-post' subreddit.name post.id %}';" class="btn-reply" data-post-id="{{ node.id }}" >
                                     Delete
                                 </button>
                                 {% endif %}
