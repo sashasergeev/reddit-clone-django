@@ -44,4 +44,7 @@ def show_notifications(context):
         .exclude(user_has_seen=True)
         .order_by("-created_at")
     )
-    return {"notifications": notifications}
+    return {
+        "notifications": notifications[:3],
+        "notification_count": notifications.count(),
+    }

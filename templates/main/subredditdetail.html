@@ -42,11 +42,16 @@
                     <input readonly type="text" placeholder="Create Post" class="create-post-input">
                 </div>
                 {% comment %} POSTS {% endcomment %}
-                {% for item in posts %}
-                    {% include 'base/post-element.html' %}
-                {% endfor %}
+                <div class="infinite-container">
+                    {% for item in posts %}
+                        {% include 'base/post-element.html' %}
+                    {% endfor %}
+                </div>
+
                 {% comment %} PAGINATION {% endcomment %}
-                {% include 'base/pagination-element.html' %}
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
+                {% endif %}
             </div>
 
             <aside class="sidebar">
@@ -78,6 +83,8 @@
                 </div>
             </aside>
         </div>
+    {% include "base/pag-inf-scripts.html" %}
+
     </main>
 
 {% endblock content %}

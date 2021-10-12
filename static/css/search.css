@@ -61,7 +61,10 @@
     box-shadow: inset 0 -2px 0 0 #d7dadc;
     color: #d7dadc;
 }
-
+.user-item-left {
+    display: flex;
+    align-items: center;
+}
 .sub-item, .user-item {
     display: flex;
     flex-direction: row;

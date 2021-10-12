@@ -4,38 +4,40 @@
 
 <div class="dropdown-notifications" id="notification_container" style="display: none;">
 	<div class="dropdown-notifications-content">
-	<div class="notifications-header">
-		<h3 class="nav-dropdown-title" style="font-size: 13px;">NOTIFICATIONS</h3>
-		<span class="nav-dropdown-title" onclick="clearNotifications()">X</span>
-	</div>
-	{% for n in notifications %} 
-			{% if n.post %}
-				<div class="notification-item">
-					<a href="{% url "main:post-notification" n.pk n.post.pk %}">
-						{{ n.from_user.username }} 
-						{% if n.notification_type == 1 %} upvoted 
-						{% elif n.notification_type == 2 %} downvoted
-						{% else %} commented on {% endif %} 
-							your post in r/{{ n.post.sub.name }} · 
-						<span class="notification-gray">{{ n.whenpublished }}</span>
-						<div style="margin-top: 5px; color: #818384;">{{ n.post.title }}</div>
-					</a>
-				</div>
-			{% elif n.comment %}
-				<div class="notification-item">
-					<a href="{% url "main:comment-notification" n.pk n.comment.pk %}">
-						{{ n.from_user.username }} 
-						{% if n.notification_type == 1 %} upvoted 
-						{% elif n.notification_type == 2 %} downvoted
-						{% else %} replied to {% endif %} 
-						your comment in r/{{ n.comment.sub.name }}· 
-						<span class="notification-gray">{{ n.whenpublished }}</span>
-						<div style="margin-top: 5px; color: #818384;">{{ n.comment.text }}</div>
-					</a>
-				</div>
-			{% endif %}
-	{% empty %}
-		<div class="notification-item" style="border: none">No Notifications</div>
-	{% endfor %}
-  </div>
+		<div class="notifications-header">
+			<h3 class="nav-dropdown-title" style="font-size: 13px;">NOTIFICATIONS</h3>
+			<span class="nav-dropdown-title" onclick="clearNotifications()">X</span>
+		</div>
+		{% for n in notifications %} 
+				{% if n.post %}
+					<div class="notification-item">
+						<a href="{% url "main:post-notification" n.pk n.post.pk %}">
+							{{ n.from_user.username }} 
+							{% if n.notification_type == 1 %} upvoted 
+							{% elif n.notification_type == 2 %} downvoted
+							{% else %} commented on
+							{% endif %} 
+								your post in r/{{ n.post.sub.name }} · 
+							<span class="notification-gray">{{ n.whenpublished }}</span>
+							<div style="margin-top: 5px; color: #818384;">{{ n.post.title }}</div>
+						</a>
+					</div>
+				{% elif n.comment %}
+					<div class="notification-item">
+						<a href="{% url "main:comment-notification" n.pk n.comment.pk %}">
+							{{ n.from_user.username }} 
+							{% if n.notification_type == 1 %} upvoted 
+							{% elif n.notification_type == 2 %} downvoted
+							{% else %} replied to {% endif %} 
+							your comment in r/{{ n.comment.sub.name }}· 
+							<span class="notification-gray">{{ n.whenpublished }}</span>
+							<div style="margin-top: 5px; color: #818384;">{{ n.comment.text }}</div>
+						</a>
+					</div>
+				{% endif %}
+		{% empty %}
+			<div class="notification-item" style="border: none">No Notifications</div>
+		{% endfor %}
+		<a class="nots-see-more-btn" href="{% url 'main:notification-list' %}">SEE ALL</a>
+    </div>
 </div>

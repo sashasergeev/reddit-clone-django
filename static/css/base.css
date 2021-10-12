@@ -399,27 +399,20 @@ nav svg {
 }
 
 @media screen and (max-width: 1024px) {
-    .nav-karma {
-        display: none;
-    }
-    .nav-currentLocation {
+    .nav-currentLocation,
+    .nav-karma,
+    .logo {
         display: none;
     }
     .location {
         padding: 0px;
         width: 58px;
     }
-    .logo {
-        display: none;
-    }
     .dropdown-location {
         left: 60px;
     }
 }
 @media screen and (max-width: 768px) {
-    .nav-username span {
-        display: none;
-    }
     .nav-dropdown-btn {
         width: 74px;
     }
@@ -429,7 +422,17 @@ nav svg {
     #create-post-nav-btn,
     #notifications,
     .nav-create-post-btn,
-    .notification-badge {
+    .notification-badge, 
+    .nav-username span {
         display: none;
     }
+}
+
+.nots-see-more-btn {
+    text-align: center;
+    display: block;
+    padding: 10px;
+    background: #272729;
+    margin-top: 5px;
+    color: #0079d3;
 }

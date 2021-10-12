@@ -16,9 +16,6 @@ from .models import (
 )
 
 
-# Create your views here.
-
-
 class IndexListView(generic.ListView):
     model = Post
     template_name = "main/index.html"
@@ -33,33 +30,50 @@ class IndexListView(generic.ListView):
         return context
 
 
-def SubredditListPage(request):
-    subs = Subreddit.objects.annotate(num_members=Count("members")).order_by(
+class SubredditListPage(generic.ListView):
+    queryset = Subreddit.objects.annotate(num_members=Count("members")).order_by(
         "-num_members"
     )
-
-    paginator = Paginator(subs, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, "main/subredditlist.html", {"page_obj": page_obj})
+    template_name = "main/subredditlist.html"
+    paginate_by = 10
+    context_object_name = "subs"
 
 
-def subredditDetailPage(request, name):
-    subreddit = Subreddit.objects.get(name=name)
-    posts = subreddit.posts.prefetch_related("post_upvote", "post_downvote").all()
+class SubredditDetailPage(generic.ListView):
+    """THIS IS DETAIL PAGE, BUT I USE ListView because i make a list of its post here"""
 
-    paginator = Paginator(posts, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+    template_name = "main/subredditdetail.html"
+    paginate_by = 10
+    context_object_name = "posts"
 
-    context = {"subreddit": subreddit, "posts": page_obj}
-    return render(request, "main/subredditdetail.html", context)
+    def get_queryset(self):
+        sub = Subreddit.objects.get(name=self.kwargs["name"])
+        return sub.posts.prefetch_related("post_upvote", "post_downvote").all()
+
+    def get_context_data(self, **kwargs):
+        context = super(SubredditDetailPage, self).get_context_data(**kwargs)
+        context["subreddit"] = Subreddit.objects.get(name=self.kwargs["name"])
+        return context
 
 
-def PostDetailPage(request, name, pk):
-    # comment purposes
-    if request.method == "POST":
+class PostDetailPage(View):
+    def get(self, request, name, pk, *args, **kwargs):
+        form = CommentForm()
+        subreddit = Subreddit.objects.get(name=name)
+        post = get_object_or_404(subreddit.posts, pk=pk)
+        comments = post.comment_set.filter(parent=None)
+        comments = comments.get_descendants(include_self=True).prefetch_related(
+            "comment_upvote", "comment_downvote"
+        )
+        context = {
+            "subreddit": subreddit,
+            "post": post,
+            "comments": comments,
+            "form": form,
+        }
+        return render(request, "main/post-detail.html", context)
+
+    def post(self, request, name, pk, *args, **kwargs):
         form = CommentForm(request.POST)
         if form.is_valid():
             new_comment = form.save(commit=False)
@@ -67,21 +81,18 @@ def PostDetailPage(request, name, pk):
             new_comment.post_id = pk
             new_comment.save()
             return HttpResponseRedirect(reverse("main:post-detail", args=(name, pk)))
-    else:
-        form = CommentForm()
-
-    # main page rendering
-    subreddit = Subreddit.objects.get(name=name)
-    post = get_object_or_404(subreddit.posts, pk=pk)
-    comments = post.comment_set.filter(parent=None)
-    comments = comments.get_descendants(include_self=True).prefetch_related(
-        "comment_upvote", "comment_downvote"
-    )
-    context = {"subreddit": subreddit, "post": post, "comments": comments, "form": form}
-    return render(request, "main/post-detail.html", context)
 
 
 # NOTOFICATION VIEWS
+class NotificationListPage(generic.ListView):
+    template_name = "notification-list.html"
+    paginate_by = 10
+    context_object_name = "nots"
+
+    def get_queryset(self):
+        return self.request.user.notofication_to.all()
+
+
 class PostCommentReplyNotification(View):
     def get(self, request, notification_pk, post_pk, *args, **kwargs):
         notification = Notifications.objects.get(pk=notification_pk)

@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import path
 
 from django.conf import settings
@@ -9,9 +8,10 @@ from .views import (
     CreatePost,
     CreatePostIn,
     CreateSubreddit,
+    NotificationListPage,
     PostCommentReplyNotification,
     CommentNotifications,
-    subredditDetailPage,
+    SubredditDetailPage,
     PostDetailPage,
     SubredditListPage,
     Search,
@@ -31,15 +31,17 @@ app_name = "main"
 urlpatterns = [
     # index - subreddit - post
     path("", IndexListView.as_view(), name="index"),
-    path("subreddits/", SubredditListPage, name="subreddit-list"),
-    path("r/<slug:name>/", subredditDetailPage, name="subreddit-detail"),
-    path("r/<slug:name>/<int:pk>/", PostDetailPage, name="post-detail"),
+    path("subreddits/", SubredditListPage.as_view(), name="subreddit-list"),
+    path("r/<slug:name>/", SubredditDetailPage.as_view(), name="subreddit-detail"),
+    path("r/<slug:name>/<int:pk>/", PostDetailPage.as_view(), name="post-detail"),
     # create post
     path("create-post/", CreatePost.as_view(), name="create-post"),
     path("r/<slug:name>/create-post/", CreatePostIn.as_view(), name="create-post-in"),
     # create community
     path("subreddits/create", CreateSubreddit.as_view(), name="create-subreddit"),
-    # Post Notifications - votes - comments
+    # FULL BLOWN NOTIFICATIONS
+    path("notifications/", NotificationListPage.as_view(), name="notification-list"),
+    # NAVBAR Notifications - votes - comments
     path(
         "notifications/<int:notification_pk>/post/<int:post_pk>/",
         PostCommentReplyNotification.as_view(),

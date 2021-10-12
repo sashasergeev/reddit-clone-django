@@ -26,7 +26,7 @@
         <div id="sub-list"> 
             <h2 class="sub-list-header">All Communities</h2>
             <div class="infinite-container">
-                {% for sub in page_obj %}
+                {% for sub in subs %}
                     <div class="infinite-item" style="position: relative;">
                         <a class="sub-item" href="{% url 'main:subreddit-detail' sub.name %}">
                             <span>{{ forloop.counter }}</span>  <img class="sub-item-logo" src="{{ sub.image.url }}" alt="{{ sub.name }} logo">
@@ -48,6 +48,7 @@
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
             {% endif %}
+            
         </div>
     {% include "base/pag-inf-scripts.html" %}
 
