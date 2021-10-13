@@ -85,12 +85,12 @@ class PostDetailPage(View):
 
 # NOTOFICATION VIEWS
 class NotificationListPage(generic.ListView):
-    template_name = "notification-list.html"
-    paginate_by = 10
+    template_name = "main/notification-list.html"
+    paginate_by = 15
     context_object_name = "nots"
 
     def get_queryset(self):
-        return self.request.user.notofication_to.all()
+        return self.request.user.notofication_to.order_by("-created_at")
 
 
 class PostCommentReplyNotification(View):

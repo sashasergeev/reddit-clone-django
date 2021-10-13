@@ -29,7 +29,7 @@
 							{% if n.notification_type == 1 %} upvoted 
 							{% elif n.notification_type == 2 %} downvoted
 							{% else %} replied to {% endif %} 
-							your comment in r/{{ n.comment.sub.name }}· 
+							your comment in r/{{ n.comment.post.sub.name }}· 
 							<span class="notification-gray">{{ n.whenpublished }}</span>
 							<div style="margin-top: 5px; color: #818384;">{{ n.comment.text }}</div>
 						</a>

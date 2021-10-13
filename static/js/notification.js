@@ -30,3 +30,28 @@ const clearNotifications = () => {
     })
     .catch((err) => console.log(err));
 };
+
+const readNotifications = () => {
+  let items = document.querySelectorAll(".notification-item"); // items in navbar
+  let itemsOnPage = document.querySelectorAll(".not-item"); // items on the notification page
+
+  fetch(`${window.location.origin}/notifications/clear/`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "X-CSRFToken": token,
+    },
+  })
+    .then((res) => res.json())
+    .then(() => {
+      items.forEach((e) => e.remove()); // removes notifications in navbars nots
+      itemsOnPage.forEach(
+        (e) =>
+          e.classList.contains("notif-hasnt-seen") &&
+          e.classList.remove("notif-hasnt-seen")
+      );
+
+      document.querySelector(".notification-badge").remove();
+    })
+    .catch((err) => console.log(err));
+};
