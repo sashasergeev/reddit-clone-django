@@ -119,11 +119,11 @@
                     {% for post in page_obj %}
                         <div class="post-item infinite-item">
                             <div class="post-item-vote">
-                                <button id="upvote-{{ post.id }}" data-post-id="{{post.id}}" class="post-upvote" {% if post|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                                <button id="upvote-{{ post.id }}" onclick="voteHandle('post', 'upvote', '{{ post.id }}')" class="post-upvote" {% if post|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
                                     <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                                 </button>
                                 <div id="votes-on-{{ post.id }}"  class="post-votes">{{ post.votes_count }}</div>
-                                <button id="downvote-{{ post.id }}" data-post-id="{{post.id}}" class="post-downvote" {% if post|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                                <button id="downvote-{{ post.id }}" onclick="voteHandle('post', 'downvote', '{{ post.id }}')" class="post-downvote" {% if post|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
                                     <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                                 </button>
                             </div>

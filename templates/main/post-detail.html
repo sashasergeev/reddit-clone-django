@@ -127,12 +127,12 @@
                     {% recursetree comments %}
                     <div id="comment-{{node.id}}" class="comment">
                         <div class="comment-vote">
-                            <button id="comment-upvote-{{node.id}}" class="comment-upvote" data-comment-id="{{ node.id }}" {% if node|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                            <button onclick="voteHandle('comment', 'upvote', {{ node.id }})" id="comment-upvote-{{node.id}}" class="comment-upvote" {% if node|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
                                 <div class="comment-upvote-btn">
                                     <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                                 </div>
                             </button>
-                            <button id="comment-downvote-{{node.id}}" class="comment-downvote" data-comment-id="{{ node.id }}" {% if node|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                            <button onclick="voteHandle('comment', 'downvote', {{ node.id }})" id="comment-downvote-{{node.id}}" class="comment-downvote" {% if node|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
                                 <div class="comment-downvote-btn">
                                     <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                                 </div>

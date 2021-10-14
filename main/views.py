@@ -8,12 +8,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 
 from .forms import CommentForm
-from .models import (
-    Subreddit,
-    Post,
-    Comment,
-    Notifications,
-)
+from .models import Subreddit, Post, Comment, Notifications
 
 
 class IndexListView(generic.ListView):

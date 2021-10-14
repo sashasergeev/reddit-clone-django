@@ -76,13 +76,13 @@
             {% else %}
                 <div class="post comment infinite-item">
                     <div class="vote-part">
-                        <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                        <button id="upvote-{{ item.id }}" onclick="voteHandle('post', 'upvote', '{{ item.id }}')" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
                             <div class="post-upvote-btn">
                                 <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                             </div>
                         </button>
                         <div id="votes-on-{{ item.id }}"  class="post-votes">{{ item.votes_count }}</div>
-                        <button id="downvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                        <button id="downvote-{{ item.id }}" onclick="voteHandle('post', 'downvote', '{{ item.id }}')" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
                             <div class="post-downvote-btn">
                                 <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                             </div>
