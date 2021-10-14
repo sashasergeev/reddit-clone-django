@@ -48,17 +48,25 @@
         {% endif %}
 
         <div class="post-comment-section">
-            <div class="comments-line">
+            <div class="bottom-line">
                 <a href="{% url 'main:post-detail' item.sub.name item.pk %}">
                     <span class="comment-svg">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                     </span>
                     <span style="color: rgb(129, 131, 132);">
                         {{item.comment_count}} Comments
-
                     </span>
                 </a>
             </div>
+            {% if user.is_authenticated %}
+                <div class="bottom-line">
+                    {% if item|is_saved:request.user %}
+                        <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})">Unsave</button>
+                    {% else %}
+                        <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})")>Save</button>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
         
 

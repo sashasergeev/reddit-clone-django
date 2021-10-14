@@ -1,5 +1,6 @@
-from django.urls import path, include
+from django.urls import path
 from .views import (
+    SavedProfile,
     register,
     LoginView,
     LogoutView,
@@ -8,7 +9,7 @@ from .views import (
     CommentsProfile,
     UpvotedProfile,
     DownvotedProfile,
-    ProfileSettings
+    ProfileSettings,
 )
 
 app_name = "accounts"
@@ -24,4 +25,5 @@ urlpatterns = [
     path("user/<slug:username>/comments/", CommentsProfile, name="profile-comments"),
     path("user/<slug:username>/upvoted/", UpvotedProfile, name="profile-upvoted"),
     path("user/<slug:username>/downvoted/", DownvotedProfile, name="profile-downvoted"),
+    path("user/<slug:username>/saved/", SavedProfile, name="profile-saved"),
 ]

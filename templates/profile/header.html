@@ -15,7 +15,11 @@
     >COMMENTS</a
   >
   {% if user.username == request.user.username %}
-  <a href="#" class="{% if current == 'SAVED' %}current{% endif %}">SAVED</a>
+  <a
+    href="{% url 'accounts:profile-saved' user.username %}"
+    class="{% if current == 'saved' %}current{% endif %}"
+    >SAVED</a
+  >
   <a
     href="{% url 'accounts:profile-upvoted' user.username %}"
     class="{% if current == 'upvoted' %}current{% endif %}"

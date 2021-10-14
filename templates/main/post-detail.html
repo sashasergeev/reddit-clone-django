@@ -78,7 +78,7 @@
                         </div>
                         {% endif %}
                         <div class="post-comment-section">
-                            <div class="comments-line">
+                            <div class="bottom-line">
                                 <span class="comment-svg">
                                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                                 </span>
@@ -86,11 +86,20 @@
                                     {{post.comment_count}} Comments
                                 </span>
                             </div>
-                                {% if request.user.username == post.creator.username %}
-                                <button onclick="window.location.href='{% url 'main:delete-post' subreddit.name post.id %}';" class="btn-reply" data-post-id="{{ node.id }}" >
+                            {% if user.is_authenticated %}
+                                <div class="bottom-line">
+                                    {% if post|is_saved:request.user %}
+                                        <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})">Unsave</button>
+                                    {% else %}
+                                        <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})")>Save</button>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if request.user.username == post.creator.username %}
+                                <a class="bottom-line" href="{% url 'main:delete-post' subreddit.name post.id %}"  data-post-id="{{ node.id }}" >
                                     Delete
-                                </button>
-                                {% endif %}
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -145,20 +154,25 @@
                                 {{node.text}}
                             </div>
                             <div class="comment-reply">
-                                <button class="btn-reply" onclick="commentReply({{node.id}})">
+                                <button class="btns-on-comments" onclick="commentReply({{node.id}})">
                                     <div class="reply-svg">
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                                     </div>
                                     <span>Reply</span>
                                 </button>
                                 {% if request.user.username == node.commentator.username %}
-                                <button class="btn-reply btn-delete" data-comment-id="{{ node.id }}" >
+                                <button class="btns-on-comments btn-delete" data-comment-id="{{ node.id }}" >
                                     Delete
                                 </button>
                                 {% endif %}
-                                <button class="btn-reply">
-                                    Save
-                                </button>
+                                
+                                {% if user.is_authenticated %}
+                                    {% if node|is_saved:request.user %}
+                                        <button class="btns-on-comments" id="comment-save-{{ node.pk }}" onclick="saveHandle('comment', {{ node.pk }})">Unsave</button>
+                                    {% else %}
+                                        <button class="btns-on-comments" id="comment-save-{{ node.pk }}" onclick="saveHandle('comment', {{ node.pk }})")>Save</button>
+                                    {% endif %}
+                                {% endif %}
                             </div>    
                         </div>
                     </div>

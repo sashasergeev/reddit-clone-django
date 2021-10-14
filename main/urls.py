@@ -22,6 +22,7 @@ from .ajax_views import (
     PostVoteHandle,
     CommentVoteHandle,
     ClearNotifications,
+    SavePostOrComment,
     SubJoin,
     SearchSubreddit,
     DeleteComment,
@@ -57,6 +58,7 @@ urlpatterns = [
     # DELETE POST
     path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-post"),
     ## AJAX URLS
+    path("save/<slug:oType>/<int:pk>/", SavePostOrComment),
     # POST - COMMENT upvote / downvote - used with fetch API
     path("post/vote/<int:pk>/<slug:voteType>/", PostVoteHandle),
     path("comment/vote/<int:pk>/<slug:voteType>/", CommentVoteHandle),

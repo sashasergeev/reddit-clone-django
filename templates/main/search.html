@@ -154,7 +154,13 @@
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                                         {{ post.comment_count }} Comments
                                     </a>
-                                    <a href="#">Save</a>
+                                    {% if user.is_authenticated %}
+                                        {% if post|is_saved:request.user %}
+                                            <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})">Unsave</button>
+                                        {% else %}
+                                            <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})")>Save</button>
+                                        {% endif %}
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

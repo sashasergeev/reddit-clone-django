@@ -116,7 +116,7 @@
     vertical-align: middle;
     height: 14px;
 }
-.btn-reply {
+.btns-on-comments {
     font-weight: 700;
     background: none;
     border: none;
@@ -126,7 +126,7 @@
     color: rgb(129, 131, 132);
     font-size: 12px;
 }
-.btn-reply:hover {
+.btns-on-comments:hover {
     background: #d7dadc24;
 }
 

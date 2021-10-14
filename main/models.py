@@ -128,6 +128,7 @@ class Post(TimeStampMixin):
     creator = models.ForeignKey(User, on_delete=models.CASCADE)
     sub = models.ForeignKey(Subreddit, related_name="posts", on_delete=models.CASCADE)
     image = models.ImageField(upload_to="images/post/", null=True, blank=True)
+    saved_by = models.ManyToManyField(User, related_name="saved_posts")
 
     # CHOICES FOR POST TYPE
     class PostType(models.TextChoices):
@@ -159,12 +160,12 @@ class Post(TimeStampMixin):
 class Comment(MPTTModel, TimeStampMixin):
     text = models.TextField()
     commentator = models.ForeignKey(User, on_delete=models.CASCADE)
-    # created_at = models.DateTimeField(auto_now_add=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     parent = TreeForeignKey(
         "self", on_delete=models.CASCADE, null=True, blank=True, related_name="children"
     )
+    saved_by = models.ManyToManyField(User, related_name="saved_comments")
 
     class MPTTMeta:
         order_insertion_by = ["created_at"]

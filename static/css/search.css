@@ -193,12 +193,16 @@
     color: #818384;
     display: flex;
     align-items: center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
 }
 .post-item-btns svg {
     width: 15px;
     margin-right: 5px;
 }
-.post-item-btns a:hover {
+.post-item-btns a:hover, 
+.post-item-btns button:hover {
     background: #d7dadc1a;
     outline: none;
 }

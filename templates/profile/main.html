@@ -29,106 +29,120 @@
         {% for message in messages %}
             {% include 'base/message-succ-saved.html' %}
         {% endfor %}
-            <div class="infinite-container">
-            {% for item in feed %}
-                {% if item.commentator %}
-                <div class="comment infinite-item">
-                    <div class="comment-header">
-                        <div class="comment-header-icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="title"
-                            aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <path data-name="layer2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" d="M2 8v40h18v11l12-11h30V8H2z" stroke-linejoin="round" stroke-linecap="round"></path> <circle data-name="layer1" cx="20" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle> <circle data-name="layer1" cx="32" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle> <circle data-name="layer1" cx="44" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle>
-                            </svg>
-                        </div>
-                        <div class="comment-header-post-info">
-                            <a href="{% url 'accounts:profile-overview' item.commentator %}" class="links">{{item.commentator}}</a> commented on <a href="{% url 'main:post-detail' item.post.sub.name item.post.id %}" class="links">{{item.post.title}}</a> • <a class="links" href="{% url 'main:subreddit-detail' item.post.sub.name %}">r/{{item.post.sub.name}}</a>
-                            • Posted by <a class="links" href="{% url 'accounts:profile-overview' item.post.creator %}" style="color: rgb(129, 131, 132);">u/{{item.post.creator}}</a>
-                        </div>
+        <div class="infinite-container">
+        {% for item in feed %}
+            {% if item.commentator %}
+            <div class="comment infinite-item">
+                <div class="comment-header">
+                    <div class="comment-header-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" aria-labelledby="title"
+                        aria-describedby="desc" role="img" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <path data-name="layer2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" d="M2 8v40h18v11l12-11h30V8H2z" stroke-linejoin="round" stroke-linecap="round"></path> <circle data-name="layer1" cx="20" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle> <circle data-name="layer1" cx="32" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle> <circle data-name="layer1" cx="44" cy="28" r="2" fill="none" stroke="#818384" stroke-miterlimit="10" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"></circle>
+                        </svg>
                     </div>
-                    <div class="comment-content">
-                        <div class="comment-container">
-                            <div class="comment-decor"></div>
-                            <div class="comment-element">
-                                <div class="comment-inners">
-                                    <div class="comment-inners2">
-                                        <div class="comment-topline">
-                                            <a href="{% url 'accounts:profile-overview' item.commentator %}"  class="links">{{ item.commentator }}</a> · {{item.votes_count}} point{{item.votes_count|pluralize }} · {{item.whenpublished}}
-                                        </div>
-                                        <div class="comment-text">
-                                            <p style="font-size:16px; color: rgb(215, 218, 220);">{{ item.text }}</p>
-                                        </div>
-                                        <div class="comment-actions">
-                                            <a href="{% url 'main:post-detail' item.post.sub.name item.post.id %}" style="margin-left: 1px;">Reply</a>
-                                            <a href="">Save</a>
-                                        </div>
+                    <div class="comment-header-post-info">
+                        <a href="{% url 'accounts:profile-overview' item.commentator %}" class="links">{{item.commentator}}</a> commented on <a href="{% url 'main:post-detail' item.post.sub.name item.post.id %}" class="links">{{item.post.title}}</a> • <a class="links" href="{% url 'main:subreddit-detail' item.post.sub.name %}">r/{{item.post.sub.name}}</a>
+                        • Posted by <a class="links" href="{% url 'accounts:profile-overview' item.post.creator %}" style="color: rgb(129, 131, 132);">u/{{item.post.creator}}</a>
+                    </div>
+                </div>
+                <div class="comment-content">
+                    <div class="comment-container">
+                        <div class="comment-decor"></div>
+                        <div class="comment-element">
+                            <div class="comment-inners">
+                                <div class="comment-inners2">
+                                    <div class="comment-topline">
+                                        <a href="{% url 'accounts:profile-overview' item.commentator %}"  class="links">{{ item.commentator }}</a> · {{item.votes_count}} point{{item.votes_count|pluralize }} · {{item.whenpublished}}
+                                    </div>
+                                    <div class="comment-text">
+                                        <p style="font-size:16px; color: rgb(215, 218, 220);">{{ item.text }}</p>
+                                    </div>
+                                    <div class="comment-actions">
+                                        <a href="{% url 'main:post-detail' item.post.sub.name item.post.id %}" style="margin-left: 1px;">Reply</a>
+                                        {% if user.is_authenticated %}
+                                            {% if item|is_saved:request.user %}
+                                                <button id="comment-save-{{ item.pk }}" onclick="saveHandle('comment', {{ item.pk }})">Unsave</button>
+                                            {% else %}
+                                                <button id="comment-save-{{ item.pk }}" onclick="saveHandle('comment', {{ item.pk }})")>Save</button>
+                                            {% endif %}
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {% else %}
-                    <div class="post comment infinite-item">
-                        <div class="vote-part">
-                            <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
-                                <div class="post-upvote-btn">
-                                    <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
-                                </div>
-                            </button>
-                            <div id="votes-on-{{ item.id }}"  class="post-votes">{{ item.votes_count }}</div>
-                            <button id="downvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
-                                <div class="post-downvote-btn">
-                                    <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
-                                </div>
-                            </button>
+            </div>
+            {% else %}
+                <div class="post comment infinite-item">
+                    <div class="vote-part">
+                        <button id="upvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                            <div class="post-upvote-btn">
+                                <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
+                            </div>
+                        </button>
+                        <div id="votes-on-{{ item.id }}"  class="post-votes">{{ item.votes_count }}</div>
+                        <button id="downvote-{{ item.id }}" data-post-id="{{item.id}}" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                            <div class="post-downvote-btn">
+                                <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="post-main">
+                        <div class="post-header">
+                            <div class="post-info">
+                                <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
+                                <a href="{% url 'main:subreddit-detail' item.sub.name %}" style="display: contents;" class="links">r/{{ item.sub.name }}</a>
+                                    • Posted by <a href="{% url 'accounts:profile-overview' item.sub.creator %}" class="links" style="display: contents; color: rgb(129, 131, 132);">u/{{ item.creator }}</a>
+                                    {{ item.whenpublished }}
+                            </div>
                         </div>
-                        <div class="post-main">
-                            <div class="post-header">
-                                <div class="post-info">
-                                    <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
-                                    <a href="{% url 'main:subreddit-detail' item.sub.name %}" style="display: contents;" class="links">r/{{ item.sub.name }}</a>
-                                        • Posted by <a href="{% url 'accounts:profile-overview' item.sub.creator %}" class="links" style="display: contents; color: rgb(129, 131, 132);">u/{{ item.creator }}</a>
-                                        {{ item.whenpublished }}
-                                </div>
+                        <div class="post-body">
+                            <a href="{% url 'main:post-detail' item.sub.name item.id %}">
+                                <h3>{{ item.title }}</h3>
+                            </a>
+                            {% if item.post_type == 'IP' %}
+                            <div class="post-text " style="max-height: none;">
+                                <img class="post-img" src="{{ item.image.url }}" style="max-width : 400px; display: block; margin: 10px auto;">
                             </div>
-                            <div class="post-body">
-                                <a href="{% url 'main:post-detail' item.sub.name item.id %}">
-                                    <h3>{{ item.title }}</h3>
+                            {% else %}
+                            <div class="post-text index-des" style="max-height: none; position: relative;">
+                                <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px; max-height: 350px;">{{item.text}}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="post-comment-section">
+                            <div class="bottom-line">
+                                <a href="{% url 'main:post-detail' item.sub.name item.pk %}">
+                                    <span class="comment-svg">
+                                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
+                                    </span>
+                                    <span style="color: rgb(129, 131, 132);">
+                                        {{item.comment_count}} Comments
+                                    </span>
                                 </a>
-                                {% if item.post_type == 'IP' %}
-                                <div class="post-text " style="max-height: none;">
-                                    <img class="post-img" src="{{ item.image.url }}" style="max-width : 400px; display: block; margin: 10px auto;">
-                                </div>
-                                {% else %}
-                                <div class="post-text index-des" style="max-height: none; position: relative;">
-                                    <p style="padding-bottom: 0px; padding: 8px 4px 4px 0px; font-size: 14px; max-height: 350px;">{{item.text}}</p>
-                                </div>
-                                {% endif %}
                             </div>
-                            <div class="post-comment-section">
-                                <div class="comments-line">
-                                    <a href="{% url 'main:post-detail' item.sub.name item.pk %}">
-                                        <span class="comment-svg">
-                                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
-                                        </span>
-                                        <span style="color: rgb(129, 131, 132);">
-                                            {{item.comment_count}} Comments
-    
-                                        </span>
-                                    </a>
+                            {% if user.is_authenticated %}
+                                <div class="bottom-line">
+                                    {% if item|is_saved:request.user %}
+                                        <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})">Unsave</button>
+                                    {% else %}
+                                        <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})")>Save</button>
+                                    {% endif %}
                                 </div>
-                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                {% endif %}
-            {% empty %}
-            <h1>User has no activity.</h1>
-            {% endfor %}
-            </div>
-
-            {% if feed.has_next %}
-                <a href="?page={{ feed.next_page_number }}" class="infinite-more-link">Show more</a>
+                </div>
             {% endif %}
+        {% empty %}
+        <h1>User has no activity.</h1>
+        {% endfor %}
+        </div>
+
+        {% if feed.has_next %}
+            <a href="?page={{ feed.next_page_number }}" class="infinite-more-link">Show more</a>
+        {% endif %}
         </div>
         <aside class="sidebar">
             <div class="sidebar-box">

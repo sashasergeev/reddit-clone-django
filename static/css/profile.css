@@ -131,12 +131,17 @@
     word-break: break-word;
     overflow: auto;
 }
-.comment-actions  a {
+.comment-actions  a, 
+.comment-actions  button {
     color: rgb(129, 131, 132);
     font-size: 13px;
     margin: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
-.comment-actions  a:hover {
+.comment-actions  a:hover,
+.comment-actions  button:hover {
     text-decoration: underline;
     color: #d7dadc;
 }
@@ -224,10 +229,17 @@
     color: rgb(129, 131, 132);
     font-size: 12px;
 }
-.comments-line {
+.bottom-line {
     padding: 4px;
     border-radius: 2px;
     color: rgb(129, 131, 132);
+}
+.bottom-line > button {
+    background: none;
+    color: #818384;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
 }
 .comment-svg {
     padding-right: 4px;
@@ -237,7 +249,7 @@
     color: rgb(129, 131, 132);
     
 }
-.comments-line:hover {
+.bottom-line:hover {
     background: rgba(178, 171, 161, 0.1);
 }
 .index-des:after {

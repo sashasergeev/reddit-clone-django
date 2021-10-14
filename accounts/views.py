@@ -154,3 +154,22 @@ def DownvotedProfile(request, username):
         "profile/main.html",
         {"user": user, "feed": page_obj, "current": "downvoted"},
     )
+
+
+@login_required
+def SavedProfile(request, username):
+    user = get_object_or_404(User, username=username)
+    posts = user.saved_posts.all()
+    comments = user.saved_comments.all()
+    feed = sorted(
+        chain(posts, comments), key=lambda data: data.created_at, reverse=True
+    )
+    paginator = Paginator(feed, 10)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(
+        request,
+        "profile/main.html",
+        {"user": user, "feed": page_obj, "current": "saved"},
+    )

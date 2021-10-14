@@ -2,7 +2,7 @@ from django import template
 
 register = template.Library()
 
-from ..models import Notifications
+from ..models import Notifications, Comment, Post
 
 
 # CHECK IF POST UPVOTED
@@ -21,6 +21,15 @@ def check_relation_downvote(post, user):
 @register.filter(name="check_join")
 def check_join(sub, user):
     return user.sub_members.filter(name=sub.name).exists()
+
+
+# CHECK IF OBJECT IS SAVED
+@register.filter(name="is_saved")
+def is_saved(feedObj, user):
+    if isinstance(feedObj, Post):
+        return user.saved_posts.filter(pk=feedObj.pk).exists()
+    else:
+        return user.saved_comments.filter(pk=feedObj.pk).exists()
 
 
 # CHECK IF COMMENT UPVOTED
@@ -45,6 +54,6 @@ def show_notifications(context):
         .order_by("-created_at")
     )
     return {
-        "notifications": notifications[:3],
         "notification_count": notifications.count(),
+        "notifications": notifications[:3],
     }

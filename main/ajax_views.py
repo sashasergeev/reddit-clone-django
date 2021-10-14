@@ -162,3 +162,26 @@ def SearchSubreddit(request):
                 data.append(item)
             res = data
     return JsonResponse({"data": res})
+
+
+def SavePostOrComment(request, oType, pk):
+    user = request.user
+    response = {"action": "saved"}
+
+    if oType == "post":
+        post = Post.objects.get(pk=pk)
+        is_saved = user.saved_posts.filter(pk=pk)
+        if is_saved.exists():
+            post.saved_by.remove(user)
+            response["action"] = "unsaved"
+        else:
+            post.saved_by.add(user)
+    elif oType == "comment":
+        comment = Comment.objects.get(pk=pk)
+        is_saved = user.saved_comments.filter(pk=pk)
+        if is_saved.exists():
+            comment.saved_by.remove(user)
+            response["action"] = "unsaved"
+        else:
+            comment.saved_by.add(user)
+    return JsonResponse(response)
