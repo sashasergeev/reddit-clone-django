@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.db.models import Count
 
 import json
-
+from .decorators import ajaxAuthCheck
 from .models import (
     CommentDownVote,
     CommentUpVote,
@@ -18,22 +18,20 @@ from .models import (
 )
 
 
-class ClearNotifications(View):
-    def post(self, request, *args, **kwargs):
-        notifications = Notifications.objects.filter(to_user=request.user)
-        for n in notifications:
-            n.user_has_seen = True
-            n.save()
-        return JsonResponse({"Status": "Removed"})
+def ClearNotifications(request):
+    notifications = Notifications.objects.filter(to_user=request.user)
+    for n in notifications:
+        n.user_has_seen = True
+        n.save()
+    return JsonResponse({"Status": "Removed"})
 
 
 # POST VOTES - JavaScript
+@ajaxAuthCheck
 def PostVoteHandle(request, pk, voteType):
     post = Post.objects.get(pk=pk)
     user = request.user
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
+
     upvote = PostsUpVotes.objects.filter(post=post, user=user)
     downvote = PostsDownVotes.objects.filter(post=post, user=user)
 
@@ -47,7 +45,6 @@ def PostVoteHandle(request, pk, voteType):
             downvote.delete()
             response["downvote_existed"] = True
         PostsUpVotes.objects.create(post=post, user=user)
-        return JsonResponse(response)
     elif voteType == "downvote":
         response = {"action": "post downvoted", "upvote_existed": False}
         if downvote.exists():
@@ -58,16 +55,15 @@ def PostVoteHandle(request, pk, voteType):
             upvote.delete()
             response["upvote_existed"] = True
         PostsDownVotes.objects.create(post=post, user=user)
-        return JsonResponse(response)
+    return JsonResponse(response)
 
 
 # COMMENT VOTES - JavaScript
+@ajaxAuthCheck
 def CommentVoteHandle(request, pk, voteType):
     comment = Comment.objects.get(pk=pk)
     user = request.user
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
+
     upvote = CommentUpVote.objects.filter(comment=comment, user=user)
     downvote = CommentDownVote.objects.filter(comment=comment, user=user)
 
@@ -96,15 +92,12 @@ def CommentVoteHandle(request, pk, voteType):
 
 
 # JOIN / LEAVE SUBREDDIT - JavaScript
+@ajaxAuthCheck
 def SubJoin(request, pk):
     # obtaining needed data
     sub = Subreddit.objects.get(pk=pk)
     user = request.user
     response = {"action": "joined"}
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
 
     # checks if sub joined, if so, deletes it
     is_joined = user.sub_members.filter(name=sub.name)
@@ -119,22 +112,18 @@ def SubJoin(request, pk):
 
 
 # delete comment - JavaScript
+@ajaxAuthCheck
 def DeleteComment(request, pk):
     # obtaining needed data
     comment = Comment.objects.get(pk=pk)
     user = request.user
-
-    # auth check
-    if not user.is_authenticated:
-        return JsonResponse({"error": "unauth"})
 
     # check if this comment is done by the same user
     if not comment.commentator == user:
         return JsonResponse({"action": "user error"})
 
     # deleting comment
-    if request.method == "POST":
-        comment.delete()
+    comment.delete()
     return JsonResponse({"action": "deleted"})
 
 
@@ -164,6 +153,7 @@ def SearchSubreddit(request):
     return JsonResponse({"data": res})
 
 
+@ajaxAuthCheck
 def SavePostOrComment(request, oType, pk):
     user = request.user
     response = {"action": "saved"}

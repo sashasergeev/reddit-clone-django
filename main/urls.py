@@ -69,7 +69,7 @@ urlpatterns = [
     # delete comment -- used with fetch API
     path("comment/<int:pk>/", DeleteComment),
     # clear notifications
-    path("notifications/clear/", ClearNotifications.as_view()),
+    path("notifications/clear/", ClearNotifications),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

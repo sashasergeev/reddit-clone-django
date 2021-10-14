@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     SavedProfile,
-    register,
+    RegisterView,
     LoginView,
     LogoutView,
     MainProfile,
@@ -15,12 +15,12 @@ from .views import (
 app_name = "accounts"
 urlpatterns = [
     # AUTH
-    path("accounts/login/", LoginView, name="login"),
-    path("accounts/register/", register, name="register"),
+    path("accounts/login/", LoginView.as_view(), name="login"),
+    path("accounts/register/", RegisterView.as_view(), name="register"),
     path("accounts/logout/", LogoutView, name="logout"),
     # PROFILE
     path("user/<slug:username>/", MainProfile, name="profile-overview"),
-    path("settings/profile/", ProfileSettings, name="profile-settings"),
+    path("settings/profile/", ProfileSettings.as_view(), name="profile-settings"),
     path("user/<slug:username>/posts/", PostsProfile, name="profile-posts"),
     path("user/<slug:username>/comments/", CommentsProfile, name="profile-comments"),
     path("user/<slug:username>/upvoted/", UpvotedProfile, name="profile-upvoted"),
