@@ -15,27 +15,27 @@
         <svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path d="M7.03 10a2.97 2.97 0 115.95 0 2.97 2.97 0 01-5.95 0m9.37-1.5a6.52 6.52 0 00-.8-1.96l.92-1.47a1.15 1.15 0 00-1.59-1.6l-1.47.94a6.49 6.49 0 00-1.95-.81l-.38-1.7a1.15 1.15 0 00-2.26 0L8.5 3.6c-.7.16-1.35.44-1.95.8l-1.47-.92a1.15 1.15 0 00-1.6 1.59l.94 1.47c-.37.6-.65 1.25-.81 1.95l-1.7.38a1.15 1.15 0 000 2.26l1.7.38c.16.7.44 1.35.8 1.95l-.92 1.47a1.15 1.15 0 001.59 1.6l1.47-.94c.6.37 1.25.65 1.95.81l.38 1.7a1.15 1.15 0 002.26 0l.38-1.7c.7-.16 1.35-.44 1.95-.8l1.47.92a1.15 1.15 0 001.6-1.59l-.94-1.47c.37-.6.65-1.25.81-1.95l1.7-.38a1.15 1.15 0 000-2.26l-1.7-.38z" fill="inherit"></path></svg>
     </div>
     <h2 class="nav-currentLocation">
-        Profile Settings
+        Community Settings
     </h2>
 {% endblock current_location %}
 
 
 {% block content %}
     <section>
-        <h3 class="section-title">Profile Settings</h3>
+        <h3 class="section-title">Community Settings</h3>
         <div class="container">
             <div class="settings">
-                <h2 class="setting-title">Customize profile</h2>
+                <h2 class="setting-title">Customize <a href="{% url 'main:subreddit-detail' sub.name %}">r/{{ sub.name }}</a></h2>
                 <form action="" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <h3 class="settings-part">PROFILE INFORMATION</h3>
-                    <h3 class="label">About (optional)</h3>
-                    <p class="label-desc">A brief description of yourself shown on your profile.</p>
-                    <textarea style="margin-bottom: 32px;" class="textarea-about" placeholder="About (optional)" name="about" id="id_about" >{{ request.user.profile.about }}</textarea>
+                    <h3 class="settings-part">COMMUNITY INFORMATION</h3>
+                    <h3 class="label">Description (optional)</h3>
+                    <p class="label-desc">A brief description of community.</p>
+                    <textarea style="margin-bottom: 32px;" class="textarea-about" placeholder="About (optional)" name="description" id="id_description" >{{ sub.description }}</textarea>
                     <h3 class="settings-part">PROFILE IMAGE</h3>
-                    {% if request.user.profile.image %}
+                    {% if sub.image %}
                         <p style="font-size: 14px;">Current</p>
-                        <img  src="{{ request.user.profile.image.url }}" alt="">
+                        <img  src="{{ sub.image.url }}" alt="">
                     {% endif %}
                     <input style="display: block;" type="file" name="image" accept="image/*" id="id_image">
                     <input class="form-post-btn" type="submit" value="SAVE">

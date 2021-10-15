@@ -6,8 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.db.models import Count
 from django.contrib.auth.models import User
+from django.contrib import messages
 
-from .forms import CommentForm
+from .forms import CommentForm, SubredditUpdateForm
 from .models import Subreddit, Post, Comment, Notifications
 
 
@@ -217,6 +218,26 @@ class CreateSubreddit(LoginRequiredMixin, generic.edit.CreateView):
         form = super(CreateSubreddit, self).get_form(form_class)
         form.fields["image"].required = False
         return form
+
+
+# SUBREDDIT SETTINGS
+class SubredditSettings(LoginRequiredMixin, View):
+    def get(self, request, sub, *args, **kwargs):
+        subreddit = Subreddit.objects.get(name=sub)
+        form = SubredditUpdateForm()
+        context = {"form": form, "sub": subreddit}
+        return render(request, "main/subredditsettings.html", context)
+
+    def post(self, request, sub, *args, **kwargs):
+        subreddit = Subreddit.objects.get(name=sub)
+        form = SubredditUpdateForm(request.POST, request.FILES, instance=subreddit)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Changes saved")
+            return redirect(reverse("main:subreddit-detail", args=[sub]))
+        else:
+            messages.error(request, "Invalid data.")
+            return render(request, "main/subredditsettings.html", {"sub": subreddit})
 
 
 # FULL SEARCH

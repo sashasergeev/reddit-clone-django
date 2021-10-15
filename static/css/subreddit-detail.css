@@ -93,3 +93,11 @@
     width: 72px;
 }
 
+.sidebar-profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    color: rgb(129, 131, 132);
+    font-size: 14px;
+}

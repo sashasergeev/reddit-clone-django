@@ -12,6 +12,7 @@ from .views import (
     PostCommentReplyNotification,
     CommentNotifications,
     SubredditDetailPage,
+    SubredditSettings,
     PostDetailPage,
     SubredditListPage,
     Search,
@@ -40,6 +41,10 @@ urlpatterns = [
     path("r/<slug:name>/create-post/", CreatePostIn.as_view(), name="create-post-in"),
     # create community
     path("subreddits/create", CreateSubreddit.as_view(), name="create-subreddit"),
+    # Community settings
+    path(
+        "r/<slug:sub>/settings/", SubredditSettings.as_view(), name="subreddit-settings"
+    ),
     # FULL BLOWN NOTIFICATIONS
     path("notifications/", NotificationListPage.as_view(), name="notification-list"),
     # NAVBAR Notifications - votes - comments

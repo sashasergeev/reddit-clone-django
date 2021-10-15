@@ -24,7 +24,6 @@
 {% block content %}
     <main class="post-page-detail">
 
-            
         <div class="subreddit-header-background">
             <a href="{% url 'main:subreddit-detail' subreddit.name %}">
                 <div class="post-detail-header">
@@ -36,23 +35,16 @@
             </a>
         </div>
 
-
         <div class="main">
-            
             <div class="post-list">
-                
                 <div class="post detail">
                     <div class="vote-part">
-                        <button class="post-upvote"  id="upvote-{{ post.id }}" data-post-id="{{post.id}}" {% if post|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
-                            <div class="post-upvote-btn">
-                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
-                            </div>
+                        <button class="post-upvote"  id="upvote-{{ post.id }}" onclick="voteHandle('post', 'upvote', '{{ post.id }}')" {% if post|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                            <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                         </button>
                         <div class="post-votes" id="votes-on-{{ post.id }}">{{ post.votes_count }}</div>
-                        <button class="post-downvote"  id="downvote-{{ post.id }}" data-post-id="{{post.id}}" {% if post|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
-                            <div class="post-downvote-btn">
-                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
-                            </div>
+                        <button class="post-downvote"  id="downvote-{{ post.id }}" onclick="voteHandle('post', 'downvote', '{{ post.id }}')" {% if post|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                            <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                         </button>
                     </div>
                     <div class="post-part">
@@ -87,18 +79,18 @@
                                 </span>
                             </div>
                             {% if user.is_authenticated %}
-                                <div class="bottom-line">
-                                    {% if post|is_saved:request.user %}
-                                        <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})">Unsave</button>
-                                    {% else %}
-                                        <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})")>Save</button>
-                                    {% endif %}
-                                </div>
+                            <div class="bottom-line">
+                                {% if post|is_saved:request.user %}
+                                    <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})">Unsave</button>
+                                {% else %}
+                                    <button id="post-save-{{ post.pk }}" onclick="saveHandle('post', {{ post.pk }})")>Save</button>
+                                {% endif %}
+                            </div>
                             {% endif %}
                             {% if request.user.username == post.creator.username %}
-                                <a class="bottom-line" href="{% url 'main:delete-post' subreddit.name post.id %}"  data-post-id="{{ node.id }}" >
-                                    Delete
-                                </a>
+                            <a class="bottom-line" href="{% url 'main:delete-post' subreddit.name post.id %}"  data-post-id="{{ node.id }}" >
+                                Delete
+                            </a>
                             {% endif %}
                         </div>
                     </div>
@@ -128,14 +120,10 @@
                     <div id="comment-{{node.id}}" class="comment">
                         <div class="comment-vote">
                             <button onclick="voteHandle('comment', 'upvote', {{ node.id }})" id="comment-upvote-{{node.id}}" class="comment-upvote" {% if node|check_relation_comm_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
-                                <div class="comment-upvote-btn">
-                                    <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
-                                </div>
+                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                             </button>
                             <button onclick="voteHandle('comment', 'downvote', {{ node.id }})" id="comment-downvote-{{node.id}}" class="comment-downvote" {% if node|check_relation_comm_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
-                                <div class="comment-downvote-btn">
-                                    <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
-                                </div>
+                                <svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                             </button>
                         </div>
                         <div class="comment-main">
@@ -155,9 +143,9 @@
                             </div>
                             <div class="comment-reply">
                                 <button class="btns-on-comments" onclick="commentReply({{node.id}})">
-                                    <div class="reply-svg">
+                                    <span class="reply-svg">
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
-                                    </div>
+                                    </span>
                                     <span>Reply</span>
                                 </button>
                                 {% if request.user.username == node.commentator.username %}

@@ -15,6 +15,14 @@ section {
     color: #d7dadc;
     padding: 40px 0;
 }
+.setting-title > a {
+    background: cadetblue;
+    border-radius: 9999px;
+    padding: 5px 10px;
+}
+.setting-title > a:hover {
+    background: #5f9ea0c9;
+}
 .container {
     max-width: 1200px;
     margin: 0 auto;

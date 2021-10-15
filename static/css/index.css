@@ -74,6 +74,7 @@
     cursor: pointer;
     outline: none;
     color: rgb(129, 131, 132);
+    height: 28px;
 }
 .post-upvote:hover {
     background: rgb(39, 39, 41);
@@ -84,9 +85,6 @@
     color: rgb(214, 138, 89);
 }
 
-.post-upvote-btn, .post-downvote-btn {
-    height: 28px;
-}
 
 .post-votes {
     font-weight: 700;

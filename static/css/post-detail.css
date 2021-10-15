@@ -138,6 +138,7 @@
     cursor: pointer;
     outline: none;
     color: rgb(129, 131, 132);
+    height: 28px;
 }
 .comment-upvote:hover {
     background: rgb(39, 39, 41);
