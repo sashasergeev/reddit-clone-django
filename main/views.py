@@ -1,12 +1,12 @@
-from django.shortcuts import get_object_or_404, redirect, render
 from django.views import generic, View
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Count
-from django.contrib.auth.models import User
-from django.contrib import messages
 
 from .forms import CommentForm, SubredditUpdateForm
 from .models import Subreddit, Post, Comment, Notifications
@@ -18,11 +18,43 @@ class IndexListView(generic.ListView):
     paginate_by = 10
     context_object_name = "posts"
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return (
+            # .select_related() TO REDUCE THE NUMBER OF QUERIES
+            qs.annotate(num_comments=Count("comment"))
+            .select_related("sub", "creator")
+            # .only() TO REDUCE MEMORY CONSUMPTION OF THE QUERY
+            .only(
+                "pk",
+                "title",
+                "text",
+                "image",
+                "post_type",
+                "created_at",
+                "creator__id",
+                "creator__username",
+                "sub__id",
+                "sub__name",
+                "sub__image",
+                # .prefetch_related() TO REDUCE THE NUMBER OF QUERIES
+            )
+            .prefetch_related("post_upvote", "post_downvote")
+        )
+
     def get_context_data(self, **kwargs):
         context = super(IndexListView, self).get_context_data(**kwargs)
-        context["sub_list"] = Subreddit.objects.annotate(
-            num_members=Count("members")
-        ).order_by("-num_members")[:5]
+        user = self.request.user
+        context["sub_list"] = (
+            Subreddit.objects.prefetch_related("members")
+            .annotate(num_members=Count("members"))
+            .order_by("-num_members")[:5]
+        )
+        if self.request.user.is_authenticated:
+            context["upvoted_posts"] = user.upvote_user_post.values("id")
+            context["downvoted_posts"] = user.downvote_user_post.values("id")
+            context["saved_posts"] = user.saved_posts.values("id")
+            context["joined_subs"] = user.sub_members.values("id")
         return context
 
 

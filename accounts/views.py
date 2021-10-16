@@ -21,8 +21,7 @@ class LoginView(View):
         if request.user.is_authenticated:
             return redirect("main:index")
         form = AuthenticationForm()
-        context = {"form": form}
-        return render(request, "registration/login.html", context)
+        return render(request, "registration/login.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
         form = AuthenticationForm(data=request.POST)
@@ -31,6 +30,8 @@ class LoginView(View):
             login(request, user)
             messages.success(request, "You've logged in successfuly!")
             return redirect("main:index")
+        else:
+            return render(request, "registration/login.html", {"form": form})
 
 
 class RegisterView(View):
@@ -38,8 +39,7 @@ class RegisterView(View):
         if request.user.is_authenticated:
             return redirect("main:index")
         form = UserCreationForm()
-        context = {"form": form}
-        return render(request, "registration/register.html", context)
+        return render(request, "registration/register.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
         form = UserCreationForm(data=request.POST)
@@ -48,11 +48,8 @@ class RegisterView(View):
             login(request, new_user)
             messages.success(request, "You've successfully created an account!")
             return redirect("main:index")
-
-        messages.error(request, "Invalid login or password.")
-        form = UserCreationForm()
-        context = {"form": form}
-        return render(request, "registration/register.html", context)
+        else:
+            return render(request, "registration/register.html", {"form": form})
 
 
 def LogoutView(request):
@@ -64,8 +61,7 @@ def LogoutView(request):
 class ProfileSettings(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = ProfileUpdateForm()
-        context = {"form": form}
-        return render(request, "profile/settings.html", context)
+        return render(request, "profile/settings.html", {"form": form})
 
     def post(self, request, *args, **kwargs):
         form = ProfileUpdateForm(
@@ -79,9 +75,7 @@ class ProfileSettings(LoginRequiredMixin, View):
             )
         else:
             messages.error(request, "Invalid data.")
-            form = UserCreationForm()
-            context = {"form": form}
-            return render(request, "registration/register.html", context)
+            return render(request, "registration/register.html", {"form": form})
 
 
 def MainProfile(request, username):

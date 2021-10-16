@@ -4,6 +4,8 @@ register = template.Library()
 
 from ..models import Notifications, Comment, Post
 
+## OPTIMIZATION ISSUE with using templatetags for checking relation:
+## it creates new queryset, therefore it makes .prefetch_related() on its view useless
 
 # CHECK IF POST UPVOTED
 @register.filter(name="check_relation_upvote")
@@ -27,9 +29,9 @@ def check_join(sub, user):
 @register.filter(name="is_saved")
 def is_saved(feedObj, user):
     if isinstance(feedObj, Post):
-        return user.saved_posts.filter(pk=feedObj.pk).exists()
+        return feedObj.saved_by.filter(username=user.username).exists()
     else:
-        return user.saved_comments.filter(pk=feedObj.pk).exists()
+        return feedObj.saved_by.filter(pk=feedObj.pk).exists()
 
 
 # CHECK IF COMMENT UPVOTED
@@ -52,6 +54,23 @@ def show_notifications(context):
         Notifications.objects.filter(to_user=request_user)
         .exclude(user_has_seen=True)
         .order_by("-created_at")
+        # .select_related() TO REDUCE THE NUMBER OF QUERIES
+        .select_related("from_user", "post__sub", "comment__post__sub")
+        # .only() TO REDUCE MEMORY CONSUMPTION OF THE QUERY
+        .only(
+            "pk",
+            "notification_type",
+            "from_user__username",
+            "created_at",
+            "to_user__username",
+            # POST NOTIF
+            "post__id",
+            "post__title",
+            "post__sub__name",
+            # COMMENT NOTIF
+            "comment__post__sub__name",
+            "comment__text",
+        )
     )
     return {
         "notification_count": notifications.count(),

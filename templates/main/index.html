@@ -52,7 +52,7 @@ Reddit CLone - Dive into something
                                 {{sub.members_count}} members
                             </div>
                         </div>
-                        {% if user.is_authenticated and sub|check_join:request.user  %}
+                        {% if sub.pk in joined_subs  %}
                             <button class="sidebar-joinEDbtn sjoin" data-sub-id="{{ sub.id }}">
                                 JOINED
                             </button>

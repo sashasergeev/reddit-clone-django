@@ -1,5 +1,5 @@
-{% if notifications.count > 0 %}
-	<span class="notification-badge">{{ notifications.count }}</span>
+{% if notification_count > 0 %}
+	<span class="notification-badge">{{ notification_count }}</span>
 {% endif %}
 
 <div class="dropdown-notifications" id="notification_container" style="display: none;">
@@ -11,7 +11,7 @@
 		{% for n in notifications %} 
 				{% if n.post %}
 					<div class="notification-item">
-						<a href="{% url "main:post-notification" n.pk n.post.pk %}">
+						<a href="{% url "main:post-notification" n.pk n.post.id %}">
 							{{ n.from_user.username }} 
 							{% if n.notification_type == 1 %} upvoted 
 							{% elif n.notification_type == 2 %} downvoted
@@ -24,7 +24,7 @@
 					</div>
 				{% elif n.comment %}
 					<div class="notification-item">
-						<a href="{% url "main:comment-notification" n.pk n.comment.pk %}">
+						<a href="{% url "main:comment-notification" n.pk n.comment.id %}">
 							{{ n.from_user.username }} 
 							{% if n.notification_type == 1 %} upvoted 
 							{% elif n.notification_type == 2 %} downvoted
