@@ -25,6 +25,7 @@ Reddit CLone - Dive into something
             <div class="create-post">
                 <input readonly type="text" placeholder="Create Post" class="create-post-input">
             </div>
+            
             {% comment %} POSTS {% endcomment %}
             <div class="infinite-container">
                 {% for item in posts %}
@@ -49,7 +50,7 @@ Reddit CLone - Dive into something
                                 r/{{sub.name}}
                             </a>
                             <div style="font-size: 12px;">
-                                {{sub.members_count}} members
+                                {{sub.num_members}} members
                             </div>
                         </div>
                         {% if sub.pk in joined_subs  %}

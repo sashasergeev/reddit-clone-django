@@ -32,10 +32,10 @@
                 <img class="subreddit-header-img" src="{{ subreddit.image.url }}" alt="{{ subreddit.name }} logo">
                 <h1 class="subreddit-header-toolbar-title">r/{{ subreddit.name }}</h1>
 
-                {% if user.is_authenticated and subreddit|check_join:request.user %}
-                <button class="subreddit-btn joined sjoin" data-sub-id="{{ subreddit.id }}">JOINED</button>
+                {% if subreddit.pk in joined_subs %}
+                    <button class="subreddit-btn joined sjoin" data-sub-id="{{ subreddit.id }}">JOINED</button>
                 {% else %}
-                <button class="subreddit-btn join sjoin" data-sub-id="{{ subreddit.id }}">JOIN</button>
+                    <button class="subreddit-btn join sjoin" data-sub-id="{{ subreddit.id }}">JOIN</button>
                 {% endif %}
             </div>
         </div>
@@ -63,7 +63,7 @@
                         <h2 style="font-size: 14px;">
                             About Community
                         </h2>
-                        {% if request.user == subreddit.creator %}
+                        {% if request.user.id == subreddit.creator.id %}
                             <div>
                                 <a href="{% url 'main:subreddit-settings' subreddit.name %}">
                                     <svg xmlns="http://www.w3.org/2000/svg" style="height: 20px; width: 20px" viewBox="0 0 64 64" aria-labelledby="title"

@@ -8,8 +8,8 @@ from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Count
 
-from .forms import CommentForm, SubredditUpdateForm
-from .models import Subreddit, Post, Comment, Notifications
+from main.forms import CommentForm, SubredditUpdateForm
+from main.models import Subreddit, Post, Comment, Notifications
 
 
 class IndexListView(generic.ListView):
@@ -22,8 +22,7 @@ class IndexListView(generic.ListView):
         qs = super().get_queryset()
         return (
             # .select_related() TO REDUCE THE NUMBER OF QUERIES
-            qs.annotate(num_comments=Count("comment"))
-            .select_related("sub", "creator")
+            qs.annotate(num_comments=Count("comment")).select_related("sub", "creator")
             # .only() TO REDUCE MEMORY CONSUMPTION OF THE QUERY
             .only(
                 "pk",
@@ -37,8 +36,8 @@ class IndexListView(generic.ListView):
                 "sub__id",
                 "sub__name",
                 "sub__image",
-                # .prefetch_related() TO REDUCE THE NUMBER OF QUERIES
             )
+            # .prefetch_related() TO REDUCE THE NUMBER OF QUERIES
             .prefetch_related("post_upvote", "post_downvote")
         )
 
@@ -48,13 +47,20 @@ class IndexListView(generic.ListView):
         context["sub_list"] = (
             Subreddit.objects.prefetch_related("members")
             .annotate(num_members=Count("members"))
-            .order_by("-num_members")[:5]
+            .order_by("-num_members")
+            .only("name")[:5]
         )
-        if self.request.user.is_authenticated:
-            context["upvoted_posts"] = user.upvote_user_post.values("id")
-            context["downvoted_posts"] = user.downvote_user_post.values("id")
-            context["saved_posts"] = user.saved_posts.values("id")
-            context["joined_subs"] = user.sub_members.values("id")
+        if user.is_authenticated:
+            # DECIDED TO CHECK WHETHER THE USER HAS INTERACTED WITH CONTENT
+            # BY MAKING QUERY VALUES, AND NOT USING TEMPLATETAGS TO CHECK RELATIONS
+            context["upvoted_posts"] = user.upvote_user_post.values_list(
+                "post_id", flat=True
+            )
+            context["downvoted_posts"] = user.downvote_user_post.values_list(
+                "post_id", flat=True
+            )
+            context["saved_posts"] = user.saved_posts.values_list("id", flat=True)
+            context["joined_subs"] = user.sub_members.values_list("id", flat=True)
         return context
 
 
@@ -66,9 +72,16 @@ class SubredditListPage(generic.ListView):
     paginate_by = 10
     context_object_name = "subs"
 
+    def get_context_data(self, **kwargs):
+        context = super(SubredditListPage, self).get_context_data(**kwargs)
+        context["joined_subs"] = self.request.user.sub_members.values_list(
+            "id", flat=True
+        )
+        return context
+
 
 class SubredditDetailPage(generic.ListView):
-    """THIS IS DETAIL PAGE, BUT I USE ListView because i make a list of its post here"""
+    """DETAIL PAGE FOR SUBREDDIT, BUT CHOOSE ListView TO LIST POSTS"""
 
     template_name = "main/subredditdetail.html"
     paginate_by = 10
@@ -76,29 +89,55 @@ class SubredditDetailPage(generic.ListView):
 
     def get_queryset(self):
         sub = Subreddit.objects.get(name=self.kwargs["name"])
-        return sub.posts.prefetch_related("post_upvote", "post_downvote").all()
+        return (
+            sub.posts.select_related("creator")
+            .annotate(num_comments=Count("comment"))
+            .prefetch_related("post_upvote", "post_downvote")
+            .all()
+        )
 
     def get_context_data(self, **kwargs):
         context = super(SubredditDetailPage, self).get_context_data(**kwargs)
         context["subreddit"] = Subreddit.objects.get(name=self.kwargs["name"])
+        user = self.request.user
+        if user.is_authenticated:
+            context["upvoted_posts"] = user.upvote_user_post.values_list(
+                "post_id", flat=True
+            )
+            context["downvoted_posts"] = user.downvote_user_post.values_list(
+                "post_id", flat=True
+            )
+            context["saved_posts"] = user.saved_posts.values_list("id", flat=True)
+            context["joined_subs"] = user.sub_members.values_list("id", flat=True)
+            context["user"] = user
         return context
 
 
 class PostDetailPage(View):
     def get(self, request, name, pk, *args, **kwargs):
         form = CommentForm()
+        user = request.user
         subreddit = Subreddit.objects.get(name=name)
         post = get_object_or_404(subreddit.posts, pk=pk)
-        comments = post.comment_set.filter(parent=None)
-        comments = comments.get_descendants(include_self=True).prefetch_related(
-            "comment_upvote", "comment_downvote"
+        comments = (
+            post.comment_set.all()
+            .prefetch_related("comment_upvote", "comment_downvote")
+            .select_related("commentator")
         )
-        context = {
-            "subreddit": subreddit,
-            "post": post,
-            "comments": comments,
-            "form": form,
-        }
+
+        context = {}
+        context["subreddit"] = subreddit
+        context["post"] = post
+        context["comments"] = comments
+        context["form"] = form
+        if request.user.is_authenticated:
+            context["comment_ups"] = user.upvote_user_comment.values_list(
+                "comment_id", flat=True
+            )
+            context["comment_downs"] = user.downvote_user_comment.values_list(
+                "comment_id", flat=True
+            )
+            context["comment_saved"] = user.saved_comments.values_list("id", flat=True)
         return render(request, "main/post-detail.html", context)
 
     def post(self, request, name, pk, *args, **kwargs):
@@ -118,7 +157,9 @@ class NotificationListPage(generic.ListView):
     context_object_name = "nots"
 
     def get_queryset(self):
-        return self.request.user.notofication_to.order_by("-created_at")
+        return self.request.user.notofication_to.select_related(
+            "post", "comment", "from_user", "post__sub", "comment__post__sub"
+        ).order_by("-created_at")
 
 
 class PostCommentReplyNotification(View):
@@ -270,67 +311,6 @@ class SubredditSettings(LoginRequiredMixin, View):
         else:
             messages.error(request, "Invalid data.")
             return render(request, "main/subredditsettings.html", {"sub": subreddit})
-
-
-# FULL SEARCH
-def Search(request):
-    query = request.GET.get("q")
-    current = request.GET.get("subpage")
-
-    if current is None:
-        subs = (
-            Subreddit.objects.filter(name__icontains=query)
-            .annotate(num_members=Count("members"))
-            .order_by("-num_members")[:3]
-        )
-        users = User.objects.filter(username__icontains=query)[:3]
-        posts = Post.objects.filter(title__icontains=query)
-        paginator = Paginator(posts, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            "subs": subs,
-            "users": users,
-            "page_obj": page_obj,
-            "searchQ": query,
-            "current": None,
-        }
-    elif current == "posts":
-        posts = Post.objects.filter(title__icontains=query)
-        paginator = Paginator(posts, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            "page_obj": page_obj,
-            "searchQ": query,
-            "current": current,
-        }
-    elif current == "subs":
-        subs = (
-            Subreddit.objects.filter(name__icontains=query)
-            .annotate(num_members=Count("members"))
-            .order_by("-num_members")
-        )
-        paginator = Paginator(subs, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            "subs": page_obj,
-            "searchQ": query,
-            "current": current,
-        }
-    elif current == "users":
-        users = User.objects.filter(username__icontains=query)
-        paginator = Paginator(users, 10)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-        context = {
-            "users": page_obj,
-            "searchQ": query,
-            "current": current,
-        }
-
-    return render(request, "main/search.html", context)
 
 
 # delete comment

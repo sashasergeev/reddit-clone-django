@@ -145,7 +145,7 @@ class Post(TimeStampMixin):
     class Meta:
         ordering = ["-created_at"]
 
-    def comment_count(self):
+    def comment_count(self):  # WILL DEPRECATE SOON
         return self.comment_set.count()
 
     def votes_count(self):

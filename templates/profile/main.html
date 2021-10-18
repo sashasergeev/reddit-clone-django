@@ -60,7 +60,7 @@
                                     <div class="comment-actions">
                                         <a href="{% url 'main:post-detail' item.post.sub.name item.post.id %}" style="margin-left: 1px;">Reply</a>
                                         {% if user.is_authenticated %}
-                                            {% if item|is_saved:request.user %}
+                                            {% if item.id in comment_saved %}
                                                 <button id="comment-save-{{ item.pk }}" onclick="saveHandle('comment', {{ item.pk }})">Unsave</button>
                                             {% else %}
                                                 <button id="comment-save-{{ item.pk }}" onclick="saveHandle('comment', {{ item.pk }})")>Save</button>
@@ -76,13 +76,13 @@
             {% else %}
                 <div class="post comment infinite-item">
                     <div class="vote-part">
-                        <button id="upvote-{{ item.id }}" onclick="voteHandle('post', 'upvote', '{{ item.id }}')" class="post-upvote" {% if item|check_relation_upvote:request.user %} style="color: rgb(0, 204, 153)"{% endif %}>
+                        <button id="upvote-{{ item.id }}" onclick="voteHandle('post', 'upvote', '{{ item.id }}')" class="post-upvote" {% if item.id in upvoted_posts %} style="color: rgb(0, 204, 153)"{% endif %}>
                             <div class="post-upvote-btn">
                                 <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" style="height: 100%;"><path d="M16 12l-4-4-4 4M12 16V8"></path></svg>
                             </div>
                         </button>
                         <div id="votes-on-{{ item.id }}"  class="post-votes">{{ item.votes_count }}</div>
-                        <button id="downvote-{{ item.id }}" onclick="voteHandle('post', 'downvote', '{{ item.id }}')" class="post-downvote" {% if item|check_relation_downvote:request.user %} style="color: rgb(214, 138, 89)"{% endif %}>
+                        <button id="downvote-{{ item.id }}" onclick="voteHandle('post', 'downvote', '{{ item.id }}')" class="post-downvote" {% if item.id in downvoted_posts %} style="color: rgb(214, 138, 89)"{% endif %}>
                             <div class="post-downvote-btn">
                                 <svg viewBox="0 0 23 23"  xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" stroke="currentColor" style="height: 100%;"><path d="M8 12l4 4 4-4M12 8v8"></path></svg>
                             </div>
@@ -93,7 +93,7 @@
                             <div class="post-info">
                                 <img style="height: 18px; width: 18px" class="nav-location-svg" src="{{ item.sub.image.url }}" alt="{{ subreddit.name }} logo">
                                 <a href="{% url 'main:subreddit-detail' item.sub.name %}" style="display: contents;" class="links">r/{{ item.sub.name }}</a>
-                                    • Posted by <a href="{% url 'accounts:profile-overview' item.sub.creator %}" class="links" style="display: contents; color: rgb(129, 131, 132);">u/{{ item.creator }}</a>
+                                    • Posted by <a href="{% url 'accounts:profile-overview' item.creator %}" class="links" style="display: contents; color: rgb(129, 131, 132);">u/{{ item.creator }}</a>
                                     {{ item.whenpublished }}
                             </div>
                         </div>
@@ -118,13 +118,13 @@
                                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path fill="none" d="M0 0h24v24H0z"></path><path d="M22 4a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h14l4 4V4z"></path></svg>
                                     </span>
                                     <span style="color: rgb(129, 131, 132);">
-                                        {{item.comment_count}} Comments
+                                        {{item.num_comments}} Comments
                                     </span>
                                 </a>
                             </div>
                             {% if user.is_authenticated %}
                                 <div class="bottom-line">
-                                    {% if item|is_saved:request.user %}
+                                    {% if item.id in saved_posts %}
                                         <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})">Unsave</button>
                                     {% else %}
                                         <button id="post-save-{{ item.pk }}" onclick="saveHandle('post', {{ item.pk }})")>Save</button>

@@ -32,14 +32,14 @@
                             <span>{{ forloop.counter }}</span>  <img class="sub-item-logo" src="{{ sub.image.url }}" alt="{{ sub.name }} logo">
                             r/{{sub.name}}
                         </a>
-                        {% if user.is_authenticated and sub|check_join:request.user  %}
-                        <button class="joined-btn sjoin" data-sub-id="{{ sub.id }}">
-                            JOINED
-                        </button>
+                        {% if sub.pk in joined_subs  %}
+                            <button class="joined-btn sjoin" data-sub-id="{{ sub.id }}">
+                                JOINED
+                            </button>
                         {% else %}
-                        <button class="join-btn sjoin" data-sub-id="{{ sub.id }}">
-                            JOIN
-                        </button>
+                            <button class="join-btn sjoin" data-sub-id="{{ sub.id }}">
+                                JOIN
+                            </button>
                         {% endif %}
                     </div>
                 {% endfor %}

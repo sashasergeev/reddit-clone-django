@@ -17,9 +17,6 @@ from .views import (
     SubredditListPage,
     Search,
     DeletePost,
-)
-
-from .ajax_views import (
     PostVoteHandle,
     CommentVoteHandle,
     ClearNotifications,

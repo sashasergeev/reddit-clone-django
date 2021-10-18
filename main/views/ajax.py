@@ -1,12 +1,9 @@
 from django.http.response import JsonResponse
-from django.shortcuts import redirect
-from django.views import View
-from django.urls import reverse
 from django.db.models import Count
 
 import json
-from .decorators import ajaxAuthCheck
-from .models import (
+from main.decorators import ajaxAuthCheck
+from main.models import (
     CommentDownVote,
     CommentUpVote,
     Subreddit,

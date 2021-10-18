@@ -142,20 +142,20 @@ django_heroku.settings(locals())
 
 # S3 BUCKETS CONFIG
 
-# AWS_ACCESS_KEY_ID = "AKIAVUQ7VH3IUA7YA3UR"
-# AWS_SECRET_ACCESS_KEY = "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"
-# AWS_STORAGE_BUCKET_NAME = "sashasergeev-redditclonedjango"
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-# AWS_S3_HOST = "s3.eu-north-1.amazonaws.com"
-# AWS_S3_REGION_NAME = "eu-north-1"
+AWS_ACCESS_KEY_ID = "AKIAVUQ7VH3IUA7YA3UR"
+AWS_SECRET_ACCESS_KEY = "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"
+AWS_STORAGE_BUCKET_NAME = "sashasergeev-redditclonedjango"
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+AWS_S3_HOST = "s3.eu-north-1.amazonaws.com"
+AWS_S3_REGION_NAME = "eu-north-1"
 
 
 # DEBUG SETTINGS
-DEBUG = True
-# DEBUG = os.environ.get("DEBUG") == "True"
+# DEBUG = True
+DEBUG = os.environ.get("DEBUG") == "True"
 
 
 INTERNAL_IPS = [
