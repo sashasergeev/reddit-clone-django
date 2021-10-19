@@ -22,8 +22,24 @@ Reddit CLone - Dive into something
 
     <main class="main">
         <div class="post-list">
+
+            <!-- create post -->
             <div class="create-post">
                 <input readonly type="text" placeholder="Create Post" class="create-post-input">
+            </div>
+            <!-- sorting -->
+            <div class="sort-container">
+                <a href="{% url 'main:index' %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+                <a href="{% url 'main:index-top' %}" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+                {% if sorting == "top" %}
+                    <select name="topSorting" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+                        <option {% if top_sort_parameter is None %} selected {% endif %} value="?t=" label="today">today</option>
+                        <option {% if top_sort_parameter == "week" %} selected {% endif %} value="?t=week" label="this week">this week</option>
+                        <option {% if top_sort_parameter == "month" %} selected {% endif %} value="?t=month" label="this month">this month</option>
+                        <option {% if top_sort_parameter == "year" %} selected {% endif %} value="?t=year" label="this year">this year</option>
+                        <option {% if top_sort_parameter == "all" %} selected {% endif %} value="?t=all" label="all time">all time</option>
+                    </select>
+                {% endif %}
             </div>
             
             {% comment %} POSTS {% endcomment %}
@@ -34,7 +50,7 @@ Reddit CLone - Dive into something
             </div>
 
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
+                <a href="?t={{ top_sort_parameter }}&page={{ page_obj.next_page_number }}" class="infinite-more-link">Show more</a>
             {% endif %}
         </div>
 

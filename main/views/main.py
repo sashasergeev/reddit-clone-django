@@ -1,15 +1,16 @@
 from django.views import generic, View
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
+from django.utils import timezone
 from django.db.models import Count
 
 from main.forms import CommentForm, SubredditUpdateForm
 from main.models import Subreddit, Post, Comment, Notifications
+
+from datetime import timedelta
 
 
 class IndexListView(generic.ListView):
@@ -17,39 +18,69 @@ class IndexListView(generic.ListView):
     template_name = "main/index.html"
     paginate_by = 10
     context_object_name = "posts"
+    # default sorting
+    sort = "new"
 
     def get_queryset(self):
         qs = super().get_queryset()
-        return (
-            # .select_related() TO REDUCE THE NUMBER OF QUERIES
-            qs.annotate(num_comments=Count("comment")).select_related("sub", "creator")
-            # .only() TO REDUCE MEMORY CONSUMPTION OF THE QUERY
-            .only(
-                "pk",
-                "title",
-                "text",
-                "image",
-                "post_type",
-                "created_at",
-                "creator__id",
-                "creator__username",
-                "sub__id",
-                "sub__name",
-                "sub__image",
-            )
-            # .prefetch_related() TO REDUCE THE NUMBER OF QUERIES
-            .prefetch_related("post_upvote", "post_downvote")
+        # .select_related() TO REDUCE THE NUMBER OF QUERIES
+        qs = qs.select_related("sub", "creator")
+        # .prefetch_related() TO REDUCE THE NUMBER OF QUERIES
+        qs = qs.prefetch_related("post_upvote", "post_downvote")
+        # .only() TO REDUCE MEMORY CONSUMPTION OF THE QUERY
+        qs = qs.only(
+            "pk",
+            "title",
+            "text",
+            "image",
+            "post_type",
+            "created_at",
+            "creator__id",
+            "creator__username",
+            "sub__id",
+            "sub__name",
+            "sub__image",
         )
+        qs = qs.annotate(num_comments=Count("comment", distinct=True))
+        # SORTING
+        if self.sort == "top":
+            timeRange = self.request.GET.get("t", None)
+            if timeRange:
+                if timeRange == "week":
+                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=7))
+                elif timeRange == "month":
+                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=30))
+                elif timeRange == "year":
+                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=365))
+                elif timeRange == "all":
+                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=365))
+            else:
+                # today's case
+                qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=1))
+
+            qs = qs.annotate(
+                vote=Count("post_upvote", distinct=True)
+                - Count("post_downvote", distinct=True)
+            ).order_by("-vote")
+        else:
+            qs = qs.order_by("-created_at")
+        return qs
 
     def get_context_data(self, **kwargs):
         context = super(IndexListView, self).get_context_data(**kwargs)
         user = self.request.user
+        # sort context
+        context["sorting"] = self.sort
+        if self.sort == "top":
+            context["top_sort_parameter"] = self.request.GET.get("t", None)
+        # sub context
         context["sub_list"] = (
             Subreddit.objects.prefetch_related("members")
             .annotate(num_members=Count("members"))
             .order_by("-num_members")
             .only("name")[:5]
         )
+        # users activity context
         if user.is_authenticated:
             # DECIDED TO CHECK WHETHER THE USER HAS INTERACTED WITH CONTENT
             # BY MAKING QUERY VALUES, AND NOT USING TEMPLATETAGS TO CHECK RELATIONS

@@ -28,10 +28,13 @@ from .views import (
 
 app_name = "main"
 urlpatterns = [
-    # index - subreddit - post
+    # index and its sorting
     path("", IndexListView.as_view(), name="index"),
+    path("top/", IndexListView.as_view(sort="top"), name="index-top"),
+    # subreddit
     path("subreddits/", SubredditListPage.as_view(), name="subreddit-list"),
     path("r/<slug:name>/", SubredditDetailPage.as_view(), name="subreddit-detail"),
+    # post
     path("r/<slug:name>/<int:pk>/", PostDetailPage.as_view(), name="post-detail"),
     # create post
     path("create-post/", CreatePost.as_view(), name="create-post"),

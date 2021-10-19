@@ -122,17 +122,15 @@
     font-size: 13px;
     font-weight: 300;
     width: 100%;
-    
 }
-
 .comment-text {
     padding: 3px 0;
     width: 100%;
     word-break: break-word;
     overflow: auto;
 }
-.comment-actions  a, 
-.comment-actions  button {
+.comment-actions a, 
+.comment-actions button {
     color: rgb(129, 131, 132);
     font-size: 13px;
     margin: 4px;
@@ -140,8 +138,8 @@
     border: none;
     cursor: pointer;
 }
-.comment-actions  a:hover,
-.comment-actions  button:hover {
+.comment-actions a:hover,
+.comment-actions button:hover {
     text-decoration: underline;
     color: #d7dadc;
 }
@@ -189,11 +187,9 @@
     background: rgb(39, 39, 41);
     color: rgb(214, 138, 89);
 }
-
 .post-upvote-btn, .post-downvote-btn {
     height: 28px;
 }
-
 .post-votes {
     font-weight: 700;
     font-size: 12px;
