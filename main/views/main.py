@@ -80,18 +80,6 @@ class IndexListView(generic.ListView):
             .order_by("-num_members")
             .only("name")[:5]
         )
-        # users activity context
-        if user.is_authenticated:
-            # DECIDED TO CHECK WHETHER THE USER HAS INTERACTED WITH CONTENT
-            # BY MAKING QUERY VALUES, AND NOT USING TEMPLATETAGS TO CHECK RELATIONS
-            context["upvoted_posts"] = user.upvote_user_post.values_list(
-                "post_id", flat=True
-            )
-            context["downvoted_posts"] = user.downvote_user_post.values_list(
-                "post_id", flat=True
-            )
-            context["saved_posts"] = user.saved_posts.values_list("id", flat=True)
-            context["joined_subs"] = user.sub_members.values_list("id", flat=True)
         return context
 
 
@@ -102,13 +90,6 @@ class SubredditListPage(generic.ListView):
     template_name = "main/subredditlist.html"
     paginate_by = 10
     context_object_name = "subs"
-
-    def get_context_data(self, **kwargs):
-        context = super(SubredditListPage, self).get_context_data(**kwargs)
-        context["joined_subs"] = self.request.user.sub_members.values_list(
-            "id", flat=True
-        )
-        return context
 
 
 class SubredditDetailPage(generic.ListView):
@@ -130,17 +111,6 @@ class SubredditDetailPage(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(SubredditDetailPage, self).get_context_data(**kwargs)
         context["subreddit"] = Subreddit.objects.get(name=self.kwargs["name"])
-        user = self.request.user
-        if user.is_authenticated:
-            context["upvoted_posts"] = user.upvote_user_post.values_list(
-                "post_id", flat=True
-            )
-            context["downvoted_posts"] = user.downvote_user_post.values_list(
-                "post_id", flat=True
-            )
-            context["saved_posts"] = user.saved_posts.values_list("id", flat=True)
-            context["joined_subs"] = user.sub_members.values_list("id", flat=True)
-            context["user"] = user
         return context
 
 
@@ -156,19 +126,12 @@ class PostDetailPage(View):
             .select_related("commentator")
         )
 
-        context = {}
-        context["subreddit"] = subreddit
-        context["post"] = post
-        context["comments"] = comments
-        context["form"] = form
-        if request.user.is_authenticated:
-            context["comment_ups"] = user.upvote_user_comment.values_list(
-                "comment_id", flat=True
-            )
-            context["comment_downs"] = user.downvote_user_comment.values_list(
-                "comment_id", flat=True
-            )
-            context["comment_saved"] = user.saved_comments.values_list("id", flat=True)
+        context = {
+            "subreddit": subreddit,
+            "post": post,
+            "comments": comments,
+            "form": form,
+        }
         return render(request, "main/post-detail.html", context)
 
     def post(self, request, name, pk, *args, **kwargs):

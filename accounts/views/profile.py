@@ -53,33 +53,6 @@ def commentsQuery(quo):
     )
 
 
-# CONTEXT
-def postsContext(context, request):
-    if request.user.is_authenticated:
-        context["upvoted_posts"] = request.user.upvote_user_post.values_list(
-            "post_id", flat=True
-        )
-        context["downvoted_posts"] = request.user.downvote_user_post.values_list(
-            "post_id", flat=True
-        )
-        context["saved_posts"] = request.user.saved_posts.values_list("id", flat=True)
-    return context
-
-
-def commentsContext(context, request):
-    if request.user.is_authenticated:
-        context["comment_saved"] = request.user.saved_comments.values_list(
-            "id", flat=True
-        )
-    return context
-
-
-def subsContext(context, request):
-    if request.user.is_authenticated:
-        context["joined_subs"] = request.user.sub_members.values_list("id", flat=True)
-    return context
-
-
 def pagination(request, pagObj, pagNum=10):
     paginator = Paginator(pagObj, pagNum)
     page_number = request.GET.get("page")
@@ -99,9 +72,6 @@ def MainProfile(request, username):
     page_obj = pagination(request, feed)
 
     context = {"user": user, "feed": page_obj, "current": "overview"}
-    context = postsContext(context, request)
-    context = commentsContext(context, request)
-    context = subsContext(context, request)
     return render(request, "profile/main.html", context)
 
 
@@ -112,7 +82,6 @@ def PostsProfile(request, username):
     page_obj = pagination(request, posts)
 
     context = {"user": user, "feed": page_obj, "current": "posts"}
-    context = postsContext(context, request)
     return render(request, "profile/main.html", context)
 
 
@@ -123,7 +92,6 @@ def CommentsProfile(request, username):
     page_obj = pagination(request, comments)
 
     context = {"user": user, "feed": page_obj, "current": "comments"}
-    context = commentsContext(context, request)
     return render(request, "profile/main.html", context)
 
 
@@ -136,7 +104,6 @@ def UpvotedProfile(request, username):
     page_obj = pagination(request, upvoted)
 
     context = {"user": user, "feed": page_obj, "current": "upvoted"}
-    context = postsContext(context, request)
     return render(request, "profile/main.html", context)
 
 
@@ -149,7 +116,6 @@ def DownvotedProfile(request, username):
     page_obj = pagination(request, downvoted)
 
     context = {"user": user, "feed": page_obj, "current": "downvoted"}
-    context = postsContext(context, request)
     return render(request, "profile/main.html", context)
 
 
@@ -164,7 +130,4 @@ def SavedProfile(request, username):
     page_obj = pagination(request, feed)
 
     context = {"user": user, "feed": page_obj, "current": "saved"}
-    context = postsContext(context, request)
-    context = commentsContext(context, request)
-    context = subsContext(context, request)
     return render(request, "profile/main.html", context)
