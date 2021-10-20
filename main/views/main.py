@@ -4,13 +4,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.urls import reverse
-from django.utils import timezone
 from django.db.models import Count
 
 from main.forms import CommentForm, SubredditUpdateForm
 from main.models import Subreddit, Post, Comment, Notifications
-
-from datetime import timedelta
+from main.methods import topSorting
 
 
 class IndexListView(generic.ListView):
@@ -44,25 +42,10 @@ class IndexListView(generic.ListView):
         qs = qs.annotate(num_comments=Count("comment", distinct=True))
         # SORTING
         if self.sort == "top":
-            timeRange = self.request.GET.get("t", None)
-            if timeRange:
-                if timeRange == "week":
-                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=7))
-                elif timeRange == "month":
-                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=30))
-                elif timeRange == "year":
-                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=365))
-                elif timeRange == "all":
-                    qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=365))
-            else:
-                # today's case
-                qs = qs.filter(created_at__gte=timezone.now() - timedelta(days=1))
-
-            qs = qs.annotate(
-                vote=Count("post_upvote", distinct=True)
-                - Count("post_downvote", distinct=True)
-            ).order_by("-vote")
+            # TOP SORT
+            qs = topSorting(self.request, qs)
         else:
+            # DEFAULT "NEW" SORT
             qs = qs.order_by("-created_at")
         return qs
 
@@ -98,39 +81,46 @@ class SubredditDetailPage(generic.ListView):
     template_name = "main/subredditdetail.html"
     paginate_by = 10
     context_object_name = "posts"
+    sort = "new"
 
     def get_queryset(self):
         sub = Subreddit.objects.get(name=self.kwargs["name"])
-        return (
+        sub = (
             sub.posts.select_related("creator")
-            .annotate(num_comments=Count("comment"))
+            .annotate(num_comments=Count("comment", distinct=True))
             .prefetch_related("post_upvote", "post_downvote")
             .all()
         )
+        if self.sort == "top":
+            sub = topSorting(self.request, sub)
+        else:
+            sub = sub.order_by("-created_at")
+        return sub
 
     def get_context_data(self, **kwargs):
         context = super(SubredditDetailPage, self).get_context_data(**kwargs)
         context["subreddit"] = Subreddit.objects.get(name=self.kwargs["name"])
+        context["sorting"] = self.sort
+        if self.sort == "top":
+            context["top_sort_parameter"] = self.request.GET.get("t", None)
         return context
 
 
 class PostDetailPage(View):
     def get(self, request, name, pk, *args, **kwargs):
         form = CommentForm()
-        user = request.user
         subreddit = Subreddit.objects.get(name=name)
         post = get_object_or_404(subreddit.posts, pk=pk)
         comments = (
-            post.comment_set.all()
-            .prefetch_related("comment_upvote", "comment_downvote")
+            post.comment_set.prefetch_related("comment_upvote", "comment_downvote")
             .select_related("commentator")
+            .all()
         )
-
         context = {
             "subreddit": subreddit,
             "post": post,
-            "comments": comments,
             "form": form,
+            "comments": comments,
         }
         return render(request, "main/post-detail.html", context)
 

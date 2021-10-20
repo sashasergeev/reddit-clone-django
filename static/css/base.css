@@ -436,3 +436,55 @@ nav svg {
     margin-top: 5px;
     color: #0079d3;
 }
+
+
+/* CREATE POST AND SORT BAR */
+.create-post, .sort-container {
+    background: rgb(26, 26, 27);
+    border: 1px solid rgb(52, 53, 54);
+    padding: 8px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.sort-btn {
+    display: inline-block;
+    padding: 8px;
+    color: #818384;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 9999px;
+    margin: 2px 5px;
+    text-align: center;
+    width: 50px;
+}
+.selectedsort {
+    background: #272729;
+    color: #fff;
+}    
+.sort-btn:hover {
+    background: #272729;
+}
+select[name=topSorting] {
+    background: #272729;
+    padding: 7px;
+    color: #d7dadc;
+    border-radius: 9999px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+.create-post-input{
+    border-radius: 4px;
+    line-height: 21px;
+    padding: 0px 16px;
+    height: 38px;
+    font-size: 14px;
+    width: 100%;
+    color: rgb(215, 218, 220);
+    border: 1px solid rgb(52, 53, 54);
+    background: rgb(39, 39, 41);
+    cursor: pointer;
+}

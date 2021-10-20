@@ -12,5 +12,11 @@ def user_activity_context(request):
         context["comment_saved"] = request.user.saved_comments.values_list(
             "id", flat=True
         )
+        context["comment_ups"] = request.user.upvote_user_comment.values_list(
+            "comment_id", flat=True
+        )
+        context["comment_downs"] = request.user.downvote_user_comment.values_list(
+            "comment_id", flat=True
+        )
         return context
     return context

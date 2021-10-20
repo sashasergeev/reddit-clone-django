@@ -1,0 +1,28 @@
+<div class="sort-container">
+    {% if curr_page == "index" %}
+        <a href="{% url 'main:index' %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+        <a href="{% url 'main:index-top' %}" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+    {% elif curr_page == "subreddit-detail" %}
+        <a href="{% url 'main:subreddit-detail' subreddit.name %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+        <a href="{% url 'main:subreddit-detail-top' subreddit.name %}" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+    {% elif current == "posts" %}
+        <a href="{% url 'accounts:profile-posts' user.username %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+        <a href="?sort=top&t=" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+    {% elif current == "comments" %}
+        <a href="{% url 'accounts:profile-comments' user.username %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+        <a href="?sort=top&t=" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+    {% elif current == "overview" %}
+        <a href="{% url 'accounts:profile-overview' user.username %}" class="sort-btn {% if sorting == 'new' %} selectedsort {% endif %}">New</a>
+        <a href="?sort=top&t=" class="sort-btn {% if sorting == 'top' %} selectedsort {% endif %}">Top</a>
+
+    {% endif %}
+    {% if sorting == "top" %}
+        <select name="topSorting" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
+            <option {% if top_sort_parameter is None %} selected {% endif %} value="?sort=top&t=" label="today">today</option>
+            <option {% if top_sort_parameter == "week" %} selected {% endif %} value="?sort=top&t=week" label="this week">this week</option>
+            <option {% if top_sort_parameter == "month" %} selected {% endif %} value="?sort=top&t=month" label="this month">this month</option>
+            <option {% if top_sort_parameter == "year" %} selected {% endif %} value="?sort=top&t=year" label="this year">this year</option>
+            <option {% if top_sort_parameter == "all" %} selected {% endif %} value="?sort=top&t=all" label="all time">all time</option>
+        </select>
+    {% endif %}
+</div>

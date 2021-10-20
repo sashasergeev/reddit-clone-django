@@ -30,6 +30,11 @@
             {% include 'base/message-succ-saved.html' %}
         {% endfor %}
         <div class="infinite-container">
+        <!-- SORTING -->
+        {% if current == "posts" or "comments" %}
+            {% include 'base/sorting-bar.html' %}
+        {% endif %}
+
         {% for item in feed %}
             {% if item.commentator %}
             <div class="comment infinite-item">

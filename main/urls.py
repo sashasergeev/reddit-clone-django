@@ -30,10 +30,15 @@ app_name = "main"
 urlpatterns = [
     # index and its sorting
     path("", IndexListView.as_view(), name="index"),
-    path("top/", IndexListView.as_view(sort="top"), name="index-top"),
+    path("top/", IndexListView.as_view(sort="top"), name="index-top"),  # TOP SORT
     # subreddit
     path("subreddits/", SubredditListPage.as_view(), name="subreddit-list"),
     path("r/<slug:name>/", SubredditDetailPage.as_view(), name="subreddit-detail"),
+    path(
+        "r/<slug:name>/top/",
+        SubredditDetailPage.as_view(sort="top"),
+        name="subreddit-detail-top",
+    ),  # TOP SORT
     # post
     path("r/<slug:name>/<int:pk>/", PostDetailPage.as_view(), name="post-detail"),
     # create post

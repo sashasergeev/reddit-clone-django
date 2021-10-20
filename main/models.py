@@ -168,7 +168,7 @@ class Comment(MPTTModel, TimeStampMixin):
     saved_by = models.ManyToManyField(User, related_name="saved_comments")
 
     class MPTTMeta:
-        order_insertion_by = ["created_at"]
+        order_insertion_by = ["-created_at"]
 
     def __str__(self):
         return f"{self.post} - {self.commentator}"
