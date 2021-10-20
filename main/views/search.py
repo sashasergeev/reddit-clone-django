@@ -107,7 +107,6 @@ def usersContext(request, query, current):
 def Search(request):
     query = request.GET.get("q")
     current = request.GET.get("subpage")
-    user = request.user
 
     if current is None:
         context = overviewContext(request, query)
@@ -117,15 +116,21 @@ def Search(request):
         context = subsContext(request, query, current)
     elif current == "users":
         context = usersContext(request, query, current)
-
-    if user.is_authenticated:
-        context["upvoted_posts"] = user.upvote_user_post.values_list(
-            "post_id", flat=True
-        )
-        context["downvoted_posts"] = user.downvote_user_post.values_list(
-            "post_id", flat=True
-        )
-        context["saved_posts"] = user.saved_posts.values_list("id", flat=True)
-        context["joined_subs"] = user.sub_members.values_list("id", flat=True)
-
     return render(request, "main/search.html", context)
+
+
+def SubredditSearch(request, subreddit):
+    query = request.GET.get("q")
+    sub = Subreddit.objects.get(name=subreddit)
+    posts = (
+        sub.posts.filter(title__icontains=query)
+        .annotate(num_comments=Count("comment"))
+        .select_related("creator", "sub")
+        .prefetch_related("post_upvote", "post_downvote")
+    )
+    page_obj = pagination(request, posts)
+    return render(
+        request,
+        "main/search.html",
+        {"page_obj": page_obj, "searchQ": query, "subreddit": sub},
+    )

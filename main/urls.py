@@ -16,6 +16,7 @@ from .views import (
     PostDetailPage,
     SubredditListPage,
     Search,
+    SubredditSearch,
     DeletePost,
     PostVoteHandle,
     CommentVoteHandle,
@@ -65,6 +66,7 @@ urlpatterns = [
     ),
     # SEARCH
     path("search/", Search, name="Search"),
+    path("r/<slug:subreddit>/search/", SubredditSearch, name="Search-in-sub"),
     # DELETE POST
     path("r/<slug:name>/<int:pk>/delete/", DeletePost, name="delete-post"),
     ## AJAX URLS

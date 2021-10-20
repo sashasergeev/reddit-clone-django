@@ -99,7 +99,10 @@
 
         <div class="search">
             <div class="input-svg"><svg viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="height: 100%;"><path d="M15.6 14l2.8 2.6a1.3 1.3 0 11-1.8 1.8l-2.8-2.7a8 8 0 111.8-1.8zm-1-4.8a5.5 5.5 0 10-5.4 5.4 5.5 5.5 0 005.4-5.4z"></path></svg></div>
-            <input id="search" autocomplete="off" placeholder="Search for subreddits" class="nav-searchbar" type="text" {% if searchQ %} value={{searchQ}} {% endif %}">
+            <input id="search" autocomplete="off" 
+                placeholder="{% if subreddit %}Search in r/{{subreddit.name}}{% else %}Search for subreddits{% endif %}"
+                class="nav-searchbar" type="text" {% if searchQ %} value={{searchQ}} {% endif %}">
+            
             <div id="searchContainer" style="display: none;">
                 Results
             </div>
