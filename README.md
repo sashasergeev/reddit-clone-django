@@ -2,38 +2,81 @@
 
 [Live DEMO](https://redditclonedjango.herokuapp.com)
 
-## Interactions - What user can do
+Static and media files are powered with [AWS S3](https://aws.amazon.com/ru/s3/).
 
-### ```Subreddits```
-User can create it, upload photo to its profile, join/left community, create posts in it.
-### ```Posts```
-User can make it in any subreddit, they can delete it, upvote/downvote, also they can comment it.
-### ```Comments```
-User can create it in any post, reply to existing, delete and upvote/downvote.
-### ```User profile```
-User can see all activity that some user has done, their posts, comment, their bio description.
+---
 
-If its their profile, they can also upload profile picture, update existing, create or update their bio description, see upvotes/downvotes they have done.
-
-### ```Notifications```
-User can see all posts/comments that other users interacted with.
-
-## How things are done
-### ```Karma```
+## **How things are done**
+### ***Karma***
 Whenever user get upvote or downvote, it chages his karma.
 User can't interact with his own karma, but his upvote/downvote will be taken into account.
 It created with the help of django signals, so everytime user creates vote, it makes signal to either add or decrement from users karma. 
-### ```Upvote/Downvote```
+### ***Upvote/Downvote***
 Whenever user do vote, it check whether opposite vote exists or not, so it can delete it. So if user already upvoted comment a, and then he decided to revote, it will remove already existed upvote and create downvote.
 After vote is created, it creates signal to interact with objects creator karma.
-### ```Comment```
+
+### ***Comment***
 Nested comments is made with the help of Django MPTT library.
-### ```Notifications```
+
+Also, posts are paginated with infinite scroll.
+### ***Notifications***
 When user comments your posts, upvote/ downvote it you recieve notification.
 Also when user replies to your comment, upvote/downvote it, you recieve notifications.
 
-If ypu will interact with your content, you won't recieve any notification.
+
+If you will interact with your content, you won't recieve any notification.
 Also if you recieve a notification and user decided to remove his content or he revoted, you won't recieve new notification.
+
+...
+
+___
+
+## **Interactions - What user can do**
+
+### **Subreddits**
+- create
+- if admin, he can set it up
+- join
+- left
+- create post in it
+
+### **Posts**
+- sort it by date
+- create
+- save
+- delete
+- upvote
+- downvote
+- comment
+
+### **Comments**
+- create
+- reply 
+- delete
+- save
+- downvote
+- comment
+### **User profile**
+
+- see activity
+- see profile
+
+If it is their profile:
+- set up profile
+- see upvotes/downotes, saved material
+
+### **Notifications**
+- gets it whenever someone is interacted with their posts/comments.
+
+### **Search functionality**
+- search for : 
+    - subreddit
+    - post
+    - user
+- live search (just results that displayed instantly on navbar) for: 
+    - subreddit
+
+***
 
 ## Technologies used:
 ### Frontend
@@ -46,10 +89,12 @@ Vanilla JavaScript
 ### Backend
 ```
 Django Framework
-Django MPTT
+Django Heroku 
 Django Signals
 SQLite3
 Pillow
+Django MPTT - used for making nested comments
+Django Storages - used for managing static and media files on AWS S3 servers.
 ```
 
 ## Instruction to run this project
